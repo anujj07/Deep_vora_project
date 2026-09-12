@@ -1,25 +1,38 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 
 import { Navigation } from './components/Navigation';
 import { HeroSection } from './components/HeroSection';
-import { MapExperience } from './components/MapExperience';
-import { JammingStudioNarrative } from './components/JammingStudioNarrative';
 import { MultiProjectIndex } from './components/MultiProjectIndex';
 import { CustomCursor } from './components/CustomCursor';
 import { Footer } from './components/Footer';
 import { ProfilePage } from './components/ProfilePage';
-import { ServicesSection } from './components/ServicesSection';
+import { ServicesPage } from './components/ServicesPage';
+import { WorkPage } from './components/WorkPage';
+import { ProjectPage } from './components/ProjectPage';
 import { PROJECTS_REGISTRY, type ProjectLocation } from './data/mapConfig';
+import { PagePreloader } from './components/PagePreloader';
+import { useSectionRevealAnimations } from './hooks/useSectionRevealAnimations';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const resolvePage = (path: string): 'home' | 'work' | 'project' | 'services' | 'about' | 'contact' => {
+  if (path.startsWith('/work/')) return 'project';
+  return path === '/work' ? 'work' : path === '/services' ? 'services' : path === '/contact' ? 'contact' : path === '/about' ? 'about' : 'home';
+};
+
 export function App() {
-  const [page, setPage] = useState<'home' | 'about' | 'contact'>(() => window.location.pathname === '/contact' ? 'contact' : window.location.pathname === '/about' ? 'about' : 'home');
+  const appRef = useRef<HTMLDivElement>(null);
+  const [page, setPage] = useState<'home' | 'work' | 'project' | 'services' | 'about' | 'contact'>(() => resolvePage(window.location.pathname));
+  const [isLoading, setIsLoading] = useState(true);
   const [isProjectDrawerOpen, setIsProjectDrawerOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<ProjectLocation>(PROJECTS_REGISTRY[0]);
+  const reducedMotion = useReducedMotion();
+  useSectionRevealAnimations(appRef, !isLoading);
+  const finishLoading = useCallback(() => setIsLoading(false), []);
 
   useEffect(() => {
     // Check for prefers-reduced-motion
@@ -54,7 +67,9 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    const handlePopState = () => setPage(window.location.pathname === '/contact' ? 'contact' : window.location.pathname === '/about' ? 'about' : 'home');
+    const handlePopState = () => {
+      setPage(resolvePage(window.location.pathname));
+    };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
@@ -64,7 +79,7 @@ export function App() {
   };
 
   const handleNavigate = (id: string) => {
-    if (id === 'about' || id === 'contact') {
+    if (id === 'work' || id === 'services' || id === 'about' || id === 'contact') {
       window.history.pushState({}, '', `/${id}`);
       setPage(id);
       window.scrollTo(0, 0);
@@ -81,38 +96,38 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fcfbf9] text-[#121212] selection:bg-black selection:text-white relative">
+    <div ref={appRef} className="min-h-screen bg-[#fcfbf9] text-[#121212] selection:bg-black selection:text-white relative">
+      {isLoading && <PagePreloader onComplete={finishLoading} />}
+      {!isLoading && <>
       {/* Custom Inertial Trailing Cursor */}
       <CustomCursor />
 
       {/* Persistent Navigation & HUD */}
       <Navigation
-        onOpenProjects={() => setIsProjectDrawerOpen(true)}
-        onSelectProject={handleSelectProject}
         onNavigate={handleNavigate}
       />
 
-      {page !== 'home' ? (
-        <ProfilePage page={page} onBack={() => handleNavigate('index')} onContact={() => handleNavigate('contact')} />
-      ) : (
-        <>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.main
+          key={page}
+          initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={reducedMotion ? undefined : { opacity: 0, y: -8 }}
+          transition={{ duration: reducedMotion ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {page === 'about' || page === 'contact' ? (
+            <ProfilePage page={page} onBack={() => handleNavigate('index')} onContact={() => handleNavigate('contact')} />
+          ) : page === 'work' ? (
+            <WorkPage />
+          ) : page === 'services' ? (
+            <ServicesPage />
+          ) : page === 'project' ? (
+            <ProjectPage projectId={window.location.pathname.slice('/work/'.length)} />
+          ) : (
+            <>
 
       {/* Section 0: Studio Cartography Hero */}
       <HeroSection />
-
-      {/* Section 1: Cinematic Map Experience (Pinned Camera Travel) */}
-      <section id="work">
-        <MapExperience
-          key={selectedProject.id}
-          selectedProjectId={selectedProject.id}
-          onProjectSelect={handleSelectProject}
-        />
-      </section>
-
-      {/* Section 2: Jamming Studio 10-Image Architectural Narrative */}
-      <JammingStudioNarrative />
-
-      <ServicesSection />
 
       {/* Multi-Project Drawer Modal */}
       <MultiProjectIndex
@@ -124,8 +139,11 @@ export function App() {
 
       {/* Section 3: Spatial Manifesto & Colophon Footer */}
       <Footer />
-        </>
-      )}
+            </>
+          )}
+        </motion.main>
+      </AnimatePresence>
+      </>}
     </div>
   );
 }

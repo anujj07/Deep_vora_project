@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { JAMMING_STUDIO_NARRATIVE } from '../data/jammingStudioData';
@@ -7,6 +7,15 @@ gsap.registerPlugin(ScrollTrigger);
 
 export const JammingStudioNarrative: React.FC = () => {
   const narrativeContainerRef = useRef<HTMLDivElement>(null);
+  const [motionProfile, setMotionProfile] = useState<'mobile' | 'tablet' | 'desktop'>(() =>
+    window.innerWidth < 640 ? 'mobile' : window.innerWidth < 1024 ? 'tablet' : 'desktop',
+  );
+
+  useEffect(() => {
+    const updateProfile = () => setMotionProfile(window.innerWidth < 640 ? 'mobile' : window.innerWidth < 1024 ? 'tablet' : 'desktop');
+    window.addEventListener('resize', updateProfile);
+    return () => window.removeEventListener('resize', updateProfile);
+  }, []);
 
   useEffect(() => {
     const container = narrativeContainerRef.current;
@@ -14,6 +23,12 @@ export const JammingStudioNarrative: React.FC = () => {
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) return;
+
+    const scaleFactor = motionProfile === 'mobile' ? 0.55 : motionProfile === 'tablet' ? 0.75 : 1;
+    const imageScale = (desktopScale: number) => 1 + (desktopScale - 1) * scaleFactor;
+    const duration = (desktopDuration: number) => desktopDuration * (motionProfile === 'mobile' ? 0.82 : motionProfile === 'tablet' ? 0.92 : 1);
+    const infoOffset = motionProfile === 'mobile' ? 16 : motionProfile === 'tablet' ? 22 : 30;
+    const infoDelay = motionProfile === 'mobile' ? 0.18 : motionProfile === 'tablet' ? 0.24 : 0.3;
 
     const ctx = gsap.context(() => {
       // Animate each narrative item individually based on its bespoke revealType
@@ -41,88 +56,88 @@ export const JammingStudioNarrative: React.FC = () => {
           case 'aperture':
             // 01 ENTRY: Vertical sliding aperture
             gsap.set(imageWrapper, { clipPath: 'inset(40% 0% 40% 0%)' });
-            gsap.set(img, { scale: 1.25 });
-            tl.to(imageWrapper, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, ease: 'power3.inOut' })
-              .to(img, { scale: 1.0, duration: 1.4, ease: 'power2.out' }, '<');
+            gsap.set(img, { scale: imageScale(1.25) });
+            tl.to(imageWrapper, { clipPath: 'inset(0% 0% 0% 0%)', duration: duration(1.2), ease: 'power3.inOut' })
+              .to(img, { scale: 1.0, duration: duration(1.4), ease: 'power2.out' }, '<');
             break;
 
           case 'lens-expand':
             // 02 SPATIAL REVEAL: Expanding rectangular lens mask
             gsap.set(imageWrapper, { clipPath: 'polygon(20% 20%, 80% 20%, 80% 80%, 20% 80%)' });
-            gsap.set(img, { scale: 1.3, filter: 'blur(8px)' });
-            tl.to(imageWrapper, { clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)', duration: 1.3, ease: 'power3.out' })
-              .to(img, { scale: 1.0, filter: 'blur(0px)', duration: 1.3, ease: 'power2.out' }, '<');
+            gsap.set(img, { scale: imageScale(1.3), filter: 'blur(8px)' });
+            tl.to(imageWrapper, { clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)', duration: duration(1.3), ease: 'power3.out' })
+              .to(img, { scale: 1.0, filter: 'blur(0px)', duration: duration(1.3), ease: 'power2.out' }, '<');
             break;
 
           case 'split-wipe':
             // 03 MAIN JAMMING AREA: Horizontal curtain wipe
             gsap.set(imageWrapper, { clipPath: 'inset(0% 50% 0% 50%)' });
-            gsap.set(img, { scale: 1.18 });
-            tl.to(imageWrapper, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.4, ease: 'expo.out' })
-              .to(img, { scale: 1.0, duration: 1.4, ease: 'power2.out' }, '<');
+            gsap.set(img, { scale: imageScale(1.18) });
+            tl.to(imageWrapper, { clipPath: 'inset(0% 0% 0% 0%)', duration: duration(1.4), ease: 'expo.out' })
+              .to(img, { scale: 1.0, duration: duration(1.4), ease: 'power2.out' }, '<');
             break;
 
           case 'angled-slice':
             // 04 ACOUSTIC WALL: Angled geometric slice
             gsap.set(imageWrapper, { clipPath: 'polygon(0% 100%, 100% 85%, 100% 100%, 0% 100%)' });
-            gsap.set(img, { scale: 1.2 });
-            tl.to(imageWrapper, { clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)', duration: 1.3, ease: 'power3.inOut' })
-              .to(img, { scale: 1.0, duration: 1.3, ease: 'power2.out' }, '<');
+            gsap.set(img, { scale: imageScale(1.2) });
+            tl.to(imageWrapper, { clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)', duration: duration(1.3), ease: 'power3.inOut' })
+              .to(img, { scale: 1.0, duration: duration(1.3), ease: 'power2.out' }, '<');
             break;
 
           case 'color-dissolve':
             // 05 COLOR BLOCKING: Color-tinted threshold dissolve
-            gsap.set(img, { filter: 'saturate(200%) brightness(1.2)', scale: 1.15 });
-            tl.to(img, { filter: 'saturate(100%) brightness(1.0)', scale: 1.0, duration: 1.4, ease: 'power2.out' });
+            gsap.set(img, { filter: 'saturate(200%) brightness(1.2)', scale: imageScale(1.15) });
+            tl.to(img, { filter: 'saturate(100%) brightness(1.0)', scale: 1.0, duration: duration(1.4), ease: 'power2.out' });
             break;
 
           case 'radial-bloom':
             // 06 LED BACKLIGHTING: Radial bloom luminous mask
             gsap.set(imageWrapper, { clipPath: 'circle(10% at 50% 50%)' });
-            gsap.set(img, { filter: 'brightness(1.5)', scale: 1.2 });
-            tl.to(imageWrapper, { clipPath: 'circle(100% at 50% 50%)', duration: 1.4, ease: 'power2.inOut' })
-              .to(img, { filter: 'brightness(1.0)', scale: 1.0, duration: 1.4, ease: 'power2.out' }, '<');
+            gsap.set(img, { filter: 'brightness(1.5)', scale: imageScale(1.2) });
+            tl.to(imageWrapper, { clipPath: 'circle(100% at 50% 50%)', duration: duration(1.4), ease: 'power2.inOut' })
+              .to(img, { filter: 'brightness(1.0)', scale: 1.0, duration: duration(1.4), ease: 'power2.out' }, '<');
             break;
 
           case 'typographic-mask':
             // 07 GRAPHIC WALL: Geometric diagonal stripe wipe
             gsap.set(imageWrapper, { clipPath: 'polygon(0 0, 0 0, 0 100%, 0 100%)' });
-            gsap.set(img, { scale: 1.2 });
-            tl.to(imageWrapper, { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 1.2, ease: 'power3.inOut' })
-              .to(img, { scale: 1.0, duration: 1.2, ease: 'power2.out' }, '<');
+            gsap.set(img, { scale: imageScale(1.2) });
+            tl.to(imageWrapper, { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: duration(1.2), ease: 'power3.inOut' })
+              .to(img, { scale: 1.0, duration: duration(1.2), ease: 'power2.out' }, '<');
             break;
 
           case 'macro-zoom':
             // 08 TECHNICAL DETAIL: Precision caliper zoom
-            gsap.set(img, { scale: 1.35 });
-            tl.to(img, { scale: 1.0, duration: 1.5, ease: 'power2.out' });
+            gsap.set(img, { scale: imageScale(1.35) });
+            tl.to(img, { scale: 1.0, duration: duration(1.5), ease: 'power2.out' });
             break;
 
           case 'soft-pan':
             // 09 LOUNGE: Soft-focus warm pan
-            gsap.set(img, { scale: 1.15, xPercent: -4 });
-            tl.to(img, { scale: 1.0, xPercent: 0, duration: 1.5, ease: 'power2.out' });
+            gsap.set(img, { scale: imageScale(1.15), xPercent: -4 * scaleFactor });
+            tl.to(img, { scale: 1.0, xPercent: 0, duration: duration(1.5), ease: 'power2.out' });
             break;
 
           case 'hero-elevation':
             // 10 FINAL HERO: Full architectural elevation zoom
             gsap.set(imageWrapper, { clipPath: 'inset(10% 10% 10% 10%)' });
-            gsap.set(img, { scale: 1.2 });
-            tl.to(imageWrapper, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.6, ease: 'power3.out' })
-              .to(img, { scale: 1.0, duration: 1.6, ease: 'power2.out' }, '<');
+            gsap.set(img, { scale: imageScale(1.2) });
+            tl.to(imageWrapper, { clipPath: 'inset(0% 0% 0% 0%)', duration: duration(1.6), ease: 'power3.out' })
+              .to(img, { scale: 1.0, duration: duration(1.6), ease: 'power2.out' }, '<');
             break;
         }
 
         // Accompanying typography slide & fade
         if (infoCard) {
-          gsap.set(infoCard, { opacity: 0, y: 30 });
-          tl.to(infoCard, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, 0.3);
+          gsap.set(infoCard, { opacity: 0, y: infoOffset });
+          tl.to(infoCard, { opacity: 1, y: 0, duration: duration(0.8), ease: 'power2.out' }, infoDelay);
         }
       });
     }, container);
 
     return () => ctx.revert();
-  }, []);
+  }, [motionProfile]);
 
   return (
     <div
@@ -189,6 +204,7 @@ export const JammingStudioNarrative: React.FC = () => {
                 <img
                   src={item.imageUrl}
                   alt={item.title}
+                  loading="lazy"
                   className="narrative-img w-full h-full object-cover will-change-transform"
                 />
 

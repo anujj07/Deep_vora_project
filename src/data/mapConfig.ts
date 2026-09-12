@@ -160,6 +160,11 @@ export const URBAN_TRACTION_IMAGES: readonly ProjectImage[] = [
   { id: 'URBAN_TRACTION_03_EXISTING_PROPOSED', imageUrl: '/projects/urban-traction/URBAN_TRACTION_03_EXISTING_PROPOSED.png', caption: '03 — Public Realm Transformation / Existing → Proposed' },
 ];
 
+export const TEDX_GATEWAY_IMAGES: readonly ProjectImage[] = [
+  { id: 'TEDX_GATEWAY_01_FINAL_STAGE', imageUrl: '/projects/tedx-gateway/TEDX_GATEWAY_01_FINAL_STAGE.png', caption: 'FINAL STAGE / Dynamic tessellated backdrop and lighting experience.' },
+  { id: 'TEDX_GATEWAY_02_DESIGN_FABRICATION', imageUrl: '/projects/tedx-gateway/TEDX_GATEWAY_02_DESIGN_FABRICATION.png', caption: 'DESIGN + FABRICATION / 15 modular panels developed as a coordinated system for fabrication, transportation and on-site assembly.' },
+];
+
 export const PROJECTS_REGISTRY: ProjectLocation[] = [
   {
     id: 'green-catalyst', title: 'GREEN CATALYST', subtitle: 'Mixed Use Development', client: 'GREEN CATALYST DEVELOPMENT', category: 'Mixed Use Development', year: '2024', area: 'Vancouver', city: 'Canada',
@@ -182,9 +187,9 @@ export const PROJECTS_REGISTRY: ProjectLocation[] = [
     description: 'A campus commons designed as an adaptable social heart for student learning, gathering, and creative exchange.', heroImage: 'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=2400&q=90', camera: { targetScale: 3, targetX: 47, targetY: 57 },
   },
   {
-    id: 'tedx-gateway', title: 'TEDx GATEWAY', subtitle: 'Stage Design', client: 'TEDx GATEWAY', category: 'Stage Design', year: '2023', area: 'Mumbai', city: 'India',
+    id: 'tedx-gateway', title: 'TEDx GATEWAY STAGE DESIGN', subtitle: 'Stage Design / Fabrication', client: 'TEDx GATEWAY', category: 'Stage Design / Fabrication', year: '2023', area: 'Mumbai', city: 'India',
     coords: { lat: '18°55\'38.0"N', lng: '72°49\'15.0"E', x: 355, y: 670 }, highlightArea: 'Mumbai',
-    description: 'A temporary stage environment shaped to focus collective attention, conversation, and performance.', heroImage: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=2400&q=90', camera: { targetScale: 2.7, targetX: 35, targetY: 67 },
+    description: 'A dynamic and free-flowing stage design inspired by tessellations, creating an undulating backdrop that represents the free flow of ideas.', heroImage: TEDX_GATEWAY_IMAGES[0].imageUrl, galleryImages: TEDX_GATEWAY_IMAGES, focus: '60-foot-long stage · 15 modular 4-foot partitions · Wood + MDF framework · Central back-projection screen · 3-day on-site assembly and finishing · Dynamic colored lighting', camera: { targetScale: 2.7, targetX: 35, targetY: 67 },
   },
   {
     id: 'mithchowki-transformation', title: 'MITHCHOWKI TRANSFORMATION', subtitle: 'Street Design', client: 'MALAD STREET INITIATIVE', category: 'Street Design', year: '2024', area: 'Malad Mithchowki Junction', city: 'Mumbai, India',

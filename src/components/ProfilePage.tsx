@@ -15,14 +15,14 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ page, onBack, onContac
   const isAbout = page === 'about';
 
   return (
-    <main className="min-h-screen bg-[#111111] px-6 pb-16 pt-32 text-[#fcfbf9] md:px-12 lg:px-20">
+    <main data-reveal-section className="min-h-screen bg-[#111111] px-6 pb-16 pt-32 text-[#fcfbf9] md:px-12 lg:px-20">
       <div className="mx-auto max-w-6xl">
-        <button onClick={onBack} className="mb-16 inline-flex items-center gap-2 text-xs font-mono-tech tracking-[0.16em] text-neutral-400 transition-colors hover:text-white">
+        <button data-reveal onClick={onBack} className="mb-16 inline-flex items-center gap-2 text-xs font-mono-tech tracking-[0.16em] text-neutral-400 transition-colors hover:text-white">
           <ArrowLeft className="h-4 w-4" /> RETURN TO INDEX
         </button>
 
         {isAbout ? (
-          <div className="space-y-24 sm:space-y-32">
+          <div data-reveal className="space-y-24 sm:space-y-32">
             <section className="border-t border-neutral-800 pt-8">
               <Label>ABOUT / DEEP VORA</Label>
               <h1 className="mt-8 max-w-5xl text-5xl font-bold leading-[0.92] tracking-tight sm:text-7xl lg:text-8xl">DEEP VORA</h1>
@@ -84,7 +84,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ page, onBack, onContac
             <p className="font-mono-tech text-xs tracking-[0.2em] text-neutral-400 lg:col-span-3">CONTACT / 02</p>
             <div className="lg:col-span-8"><h1 className="text-5xl font-bold leading-[0.98] tracking-tight sm:text-7xl">Personal details</h1><div className="mt-12 grid max-w-3xl gap-px overflow-hidden rounded-xl border border-neutral-800 bg-neutral-800 sm:grid-cols-2"><div className="bg-[#111111] p-7"><p className="mb-4 font-mono-tech text-xs tracking-[0.16em] text-neutral-500">NAME</p><p className="text-xl font-semibold">Deep Vora</p></div><div className="bg-[#111111] p-7"><p className="mb-4 font-mono-tech text-xs tracking-[0.16em] text-neutral-500">LOCATION</p><p className="flex items-center gap-2 text-xl font-semibold"><MapPin className="h-4 w-4" /> Vancouver, BC</p></div><a href="mailto:architectdeepvora@gmail.com" className="bg-[#111111] p-7 transition-colors hover:bg-neutral-900 sm:col-span-2"><p className="mb-4 font-mono-tech text-xs tracking-[0.16em] text-neutral-500">EMAIL</p><p className="flex items-center gap-3 text-lg font-semibold underline underline-offset-4 sm:text-xl"><Mail className="h-5 w-5" /> architectdeepvora@gmail.com</p></a></div><p className="mt-8 max-w-xl text-sm leading-relaxed text-neutral-400">Open to relocation within the GTA. Accepting select architectural and acoustic commissions for 2025–2026.</p></div>
           </section>
-          <div className="space-y-24 sm:space-y-32">
+          <div data-reveal className="space-y-24 sm:space-y-32">
             <section className="border-t border-neutral-800 pt-8">
               <Label>CONTACT / DEEP VORA</Label>
               <h1 className="mt-8 max-w-5xl text-5xl font-bold leading-[0.92] tracking-tight sm:text-7xl lg:text-8xl">LET&apos;S WORK<br />TOGETHER.</h1>
