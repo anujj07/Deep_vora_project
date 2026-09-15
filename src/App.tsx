@@ -9,6 +9,8 @@ import { HeroSection } from './components/HeroSection';
 import { MultiProjectIndex } from './components/MultiProjectIndex';
 import { CustomCursor } from './components/CustomCursor';
 import { Footer } from './components/Footer';
+import { StudioStories } from './components/StudioStories';
+import { PracticeCulture } from './components/PracticeCulture';
 import { ProfilePage } from './components/ProfilePage';
 import { ServicesPage } from './components/ServicesPage';
 import { WorkPage } from './components/WorkPage';
@@ -30,9 +32,15 @@ export function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isProjectDrawerOpen, setIsProjectDrawerOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<ProjectLocation>(PROJECTS_REGISTRY[0]);
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => localStorage.getItem('theme') === 'dark' ? 'dark' : 'light');
   const reducedMotion = useReducedMotion();
   useSectionRevealAnimations(appRef, !isLoading);
   const finishLoading = useCallback(() => setIsLoading(false), []);
+
+  useEffect(() => {
+    localStorage.setItem('theme', theme);
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
 
   useEffect(() => {
     // Check for prefers-reduced-motion
@@ -96,7 +104,7 @@ export function App() {
   };
 
   return (
-    <div ref={appRef} className="min-h-screen bg-[#fcfbf9] text-[#121212] selection:bg-black selection:text-white relative">
+    <div ref={appRef} data-theme-root={theme} className="min-h-screen bg-[#fcfbf9] text-[#121212] selection:bg-black selection:text-white relative">
       {isLoading && <PagePreloader onComplete={finishLoading} />}
       {!isLoading && <>
       {/* Custom Inertial Trailing Cursor */}
@@ -105,6 +113,8 @@ export function App() {
       {/* Persistent Navigation & HUD */}
       <Navigation
         onNavigate={handleNavigate}
+        theme={theme}
+        onToggleTheme={() => setTheme((current) => current === 'light' ? 'dark' : 'light')}
       />
 
       <AnimatePresence mode="wait" initial={false}>
@@ -138,6 +148,8 @@ export function App() {
       />
 
       {/* Section 3: Spatial Manifesto & Colophon Footer */}
+      <StudioStories />
+      <PracticeCulture />
       <Footer />
             </>
           )}

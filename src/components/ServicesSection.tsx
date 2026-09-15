@@ -56,7 +56,8 @@ export const HomeProjectListing: React.FC = () => (
               </div>
               <div className="pt-5">
                 <p className="font-mono-tech text-[10px] uppercase tracking-[0.13em] text-white/55 sm:text-[11px]">{project.category}</p>
-                <h3 className="mt-3 text-2xl font-medium leading-[0.98] tracking-[-0.035em] text-white sm:text-3xl">{project.title}</h3>
+                <h3 className="mt-3 font-project-title text-2xl leading-[1.15] text-white sm:text-3xl">{project.title}</h3>
+                <p className="mt-3 font-project-meta text-xs leading-snug text-white/65 sm:text-[13px]">{project.area}, {project.city}</p>
                 <p className="mt-4 font-mono-tech text-[10px] uppercase tracking-[0.13em] text-white/45 sm:text-[11px]">{project.year} · {project.area}, {project.city}</p>
               </div>
             </a>

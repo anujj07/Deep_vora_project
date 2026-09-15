@@ -25,7 +25,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ page, onBack, onContac
           <div data-reveal className="space-y-24 sm:space-y-32">
             <section className="border-t border-neutral-800 pt-8">
               <Label>ABOUT / DEEP VORA</Label>
-              <h1 className="mt-8 max-w-5xl text-5xl font-bold leading-[0.92] tracking-tight sm:text-7xl lg:text-8xl">DEEP VORA</h1>
               <p className="mt-8 max-w-3xl text-lg font-medium leading-tight text-neutral-200 sm:text-2xl">ARCHITECTURE <span className="text-neutral-600">×</span> URBAN DESIGN <span className="text-neutral-600">×</span> CONSTRUCTION</p>
               <p className="mt-12 max-w-2xl text-base leading-relaxed text-neutral-400 sm:text-lg">Working across architecture, urban design and construction delivery — connecting design intent with technical coordination and the realities of the site.</p>
             </section>

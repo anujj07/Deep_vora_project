@@ -24,7 +24,7 @@
   html {
     background-color: var(--bg-primary);
     color: var(--text-primary);
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     scroll-behavior: auto !important; /* Managed by Lenis */
     overflow-x: hidden;
   }
@@ -35,6 +35,24 @@
     overflow-x: hidden;
     min-height: 100vh;
     cursor: default;
+  }
+
+  html[data-theme="dark"] {
+    background-color: #121212;
+    color-scheme: dark;
+  }
+
+  /* The interface is intentionally monochrome, so inversion provides a complete
+     dark scheme while images are immediately restored to their natural colours. */
+  [data-theme-root="dark"] {
+    filter: invert(1) hue-rotate(180deg);
+  }
+
+  [data-theme-root="dark"] img,
+  [data-theme-root="dark"] video,
+  [data-theme-root="dark"] picture,
+  [data-theme-root="dark"] svg image {
+    filter: invert(1) hue-rotate(180deg);
   }
 
   /* Architectural grid background */
@@ -55,8 +73,26 @@
 
 /* Technical font styling */
 .font-mono-tech {
-  font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, Monaco, monospace;
+  font-family: Arial, Helvetica, sans-serif;
   letter-spacing: -0.02em;
+}
+
+/* Project cards use the editorial sans treatment from the featured-work reference. */
+.font-project-title {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+
+.font-project-meta {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* A warmer reading face reserved for long-form project narratives. */
+.font-narrative {
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 /* Custom scrollbar */

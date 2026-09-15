@@ -85,7 +85,6 @@ export const CustomCursor: React.FC = () => {
           }`}
         />
 
-        {/* Dynamic Contextual Text Label */}
         {cursorText && (
           <span className="absolute top-14 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded bg-black text-white text-[9px] font-mono-tech whitespace-nowrap uppercase tracking-wider shadow-md">
             {cursorText}

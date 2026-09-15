@@ -160,21 +160,41 @@ export const URBAN_TRACTION_IMAGES: readonly ProjectImage[] = [
   { id: 'URBAN_TRACTION_03_EXISTING_PROPOSED', imageUrl: '/projects/urban-traction/URBAN_TRACTION_03_EXISTING_PROPOSED.png', caption: '03 — Public Realm Transformation / Existing → Proposed' },
 ];
 
+export const URBAN_TRACTION_SCROLL_IMAGES: readonly string[] = [
+  '/projects/urban-traction/URBAN_TRACTION_01_PROPOSED_PUBLIC_REALM.png',
+  '/projects/urban-traction/URBAN_TRACTION_02_EXISTING_STREET.png',
+  '/projects/urban-traction/URBAN_TRACTION_03_PROPOSED_BOULEVARD.png',
+  '/projects/urban-traction/URBAN_TRACTION_04_EXISTING_BOULEVARD.png',
+];
+
 export const TEDX_GATEWAY_IMAGES: readonly ProjectImage[] = [
   { id: 'TEDX_GATEWAY_01_FINAL_STAGE', imageUrl: '/projects/tedx-gateway/TEDX_GATEWAY_01_FINAL_STAGE.png', caption: 'FINAL STAGE / Dynamic tessellated backdrop and lighting experience.' },
   { id: 'TEDX_GATEWAY_02_DESIGN_FABRICATION', imageUrl: '/projects/tedx-gateway/TEDX_GATEWAY_02_DESIGN_FABRICATION.png', caption: 'DESIGN + FABRICATION / 15 modular panels developed as a coordinated system for fabrication, transportation and on-site assembly.' },
 ];
 
+export const CATALYST_IMAGES: readonly ProjectImage[] = [
+  { id: 'CATALYST_01_MASTERPLAN', imageUrl: '/projects/catalyst/CATALYST_01_MASTERPLAN.png', caption: '01 — Proposed neighbourhood masterplan' },
+  { id: 'CATALYST_02_DESIGN_INTENT', imageUrl: '/projects/catalyst/CATALYST_02_DESIGN_INTENT.png', caption: '02 — Design intent diagrams' },
+];
+
+export const MITHCHOWKI_TRANSFORMATION_IMAGES: readonly ProjectImage[] = [
+  { id: 'MITHCHOWKI_TRANSFORMATION_01', imageUrl: '/projects/mithchowki-transformation/MITHCHOWKI_TRANSFORMATION_01.png', caption: '01 — Junction transformation' },
+];
+
+export const LOOP_IMAGES: readonly ProjectImage[] = [
+  { id: 'LOOP_01_VISION', imageUrl: '/projects/loop/LOOP_01_VISION.png', caption: '01 — Neighbourhood vision' },
+];
+
 export const PROJECTS_REGISTRY: ProjectLocation[] = [
   {
-    id: 'green-catalyst', title: 'GREEN CATALYST', subtitle: 'Mixed Use Development', client: 'GREEN CATALYST DEVELOPMENT', category: 'Mixed Use Development', year: '2024', area: 'Vancouver', city: 'Canada',
+    id: 'green-catalyst', title: 'CATALYST', subtitle: 'Mixed Use Development', client: 'GREEN CATALYST DEVELOPMENT', category: 'Mixed Use Development', year: '2024', area: 'Vancouver', city: 'Canada',
     coords: { lat: '49°16\'42.0"N', lng: '123°06\'52.0"W', x: 760, y: 350 }, highlightArea: 'Vancouver',
-    description: 'A mixed-use urban development that connects landscape, living, and public life through layered green infrastructure.', heroImage: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2400&q=90', camera: { targetScale: 3.4, targetX: 76, targetY: 35 },
+    description: 'A mixed-use urban development that connects landscape, living, and public life through layered green infrastructure.', heroImage: CATALYST_IMAGES[0].imageUrl, galleryImages: CATALYST_IMAGES, camera: { targetScale: 3.4, targetX: 76, targetY: 35 },
   },
   {
     id: 'loop', title: 'LOOP', subtitle: 'Neighbourhood Planning and Design', client: 'LOOP PLANNING COLLECTIVE', category: 'Neighbourhood Planning & Design', year: '2024', area: 'Victoria', city: 'Canada',
     coords: { lat: '48°25\'13.0"N', lng: '123°21\'43.0"W', x: 520, y: 245 }, highlightArea: 'Victoria',
-    description: 'A connected neighbourhood framework organized around walkability, civic life, and resilient public landscapes.', heroImage: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=2400&q=90', camera: { targetScale: 2.8, targetX: 52, targetY: 25 },
+    description: 'A connected neighbourhood framework that turns James Bay into a resilient socio-cultural hub through mobility, commercial, and green corridors.', heroImage: LOOP_IMAGES[0].imageUrl, galleryImages: LOOP_IMAGES, focus: 'Mobility Corridor · Commercial Corridor · Green Corridor · Eco-tourism · Community Interaction', camera: { targetScale: 2.8, targetX: 52, targetY: 25 },
   },
   {
     id: 'urban-traction', title: 'URBAN TRACTION', subtitle: 'Urban Design / Masterplanning', client: 'GRANDVIEW WOODLAND', category: 'Urban Design / Masterplanning', year: '2023', area: 'Grandview Woodland, Vancouver', city: 'Canada',
@@ -194,7 +214,7 @@ export const PROJECTS_REGISTRY: ProjectLocation[] = [
   {
     id: 'mithchowki-transformation', title: 'MITHCHOWKI TRANSFORMATION', subtitle: 'Street Design', client: 'MALAD STREET INITIATIVE', category: 'Street Design', year: '2024', area: 'Malad Mithchowki Junction', city: 'Mumbai, India',
     coords: { lat: '19°11\'33.0"N', lng: '72°50\'06.0"E', x: 610, y: 520 }, highlightArea: 'Mithchowki Junction',
-    description: 'A street transformation that rebalances a busy junction around safer movement, shade, and public life.', heroImage: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=2400&q=90', camera: { targetScale: 3.2, targetX: 61, targetY: 52 },
+    description: 'A street transformation that rebalances a busy junction around safer movement, shade, and public life.', heroImage: MITHCHOWKI_TRANSFORMATION_IMAGES[0].imageUrl, galleryImages: MITHCHOWKI_TRANSFORMATION_IMAGES, camera: { targetScale: 3.2, targetX: 61, targetY: 52 },
   },
 ];
 
