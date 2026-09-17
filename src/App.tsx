@@ -9,26 +9,26 @@ import { HeroSection } from './components/HeroSection';
 import { MultiProjectIndex } from './components/MultiProjectIndex';
 import { CustomCursor } from './components/CustomCursor';
 import { Footer } from './components/Footer';
-import { StudioStories } from './components/StudioStories';
-import { PracticeCulture } from './components/PracticeCulture';
+import { JournalEmbed } from './components/JournalEmbed';
 import { ProfilePage } from './components/ProfilePage';
 import { ServicesPage } from './components/ServicesPage';
 import { WorkPage } from './components/WorkPage';
 import { ProjectPage } from './components/ProjectPage';
+import { ArchitecturePage } from './components/ArchitecturePage';
 import { PROJECTS_REGISTRY, type ProjectLocation } from './data/mapConfig';
 import { PagePreloader } from './components/PagePreloader';
 import { useSectionRevealAnimations } from './hooks/useSectionRevealAnimations';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const resolvePage = (path: string): 'home' | 'work' | 'project' | 'services' | 'about' | 'contact' => {
+const resolvePage = (path: string): 'home' | 'work' | 'project' | 'architecture' | 'services' | 'about' | 'contact' => {
   if (path.startsWith('/work/')) return 'project';
-  return path === '/work' ? 'work' : path === '/services' ? 'services' : path === '/contact' ? 'contact' : path === '/about' ? 'about' : 'home';
+  return path === '/work' ? 'work' : path === '/architecture' ? 'architecture' : path === '/services' ? 'services' : path === '/contact' ? 'contact' : path === '/about' ? 'about' : 'home';
 };
 
 export function App() {
   const appRef = useRef<HTMLDivElement>(null);
-  const [page, setPage] = useState<'home' | 'work' | 'project' | 'services' | 'about' | 'contact'>(() => resolvePage(window.location.pathname));
+  const [page, setPage] = useState<'home' | 'work' | 'project' | 'architecture' | 'services' | 'about' | 'contact'>(() => resolvePage(window.location.pathname));
   const [isLoading, setIsLoading] = useState(true);
   const [isProjectDrawerOpen, setIsProjectDrawerOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<ProjectLocation>(PROJECTS_REGISTRY[0]);
@@ -87,7 +87,7 @@ export function App() {
   };
 
   const handleNavigate = (id: string) => {
-    if (id === 'work' || id === 'services' || id === 'about' || id === 'contact') {
+    if (id === 'work' || id === 'architecture' || id === 'services' || id === 'about' || id === 'contact') {
       window.history.pushState({}, '', `/${id}`);
       setPage(id);
       window.scrollTo(0, 0);
@@ -104,7 +104,7 @@ export function App() {
   };
 
   return (
-    <div ref={appRef} data-theme-root={theme} className="min-h-screen bg-[#fcfbf9] text-[#121212] selection:bg-black selection:text-white relative">
+    <div ref={appRef} data-theme-root={theme} className="relative min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] selection:bg-black selection:text-white">
       {isLoading && <PagePreloader onComplete={finishLoading} />}
       {!isLoading && <>
       {/* Custom Inertial Trailing Cursor */}
@@ -129,6 +129,8 @@ export function App() {
             <ProfilePage page={page} onBack={() => handleNavigate('index')} onContact={() => handleNavigate('contact')} />
           ) : page === 'work' ? (
             <WorkPage />
+          ) : page === 'architecture' ? (
+            <ArchitecturePage />
           ) : page === 'services' ? (
             <ServicesPage />
           ) : page === 'project' ? (
@@ -147,9 +149,7 @@ export function App() {
         selectedProjectId={selectedProject.id}
       />
 
-      {/* Section 3: Spatial Manifesto & Colophon Footer */}
-      <StudioStories />
-      <PracticeCulture />
+      <JournalEmbed />
       <Footer />
             </>
           )}

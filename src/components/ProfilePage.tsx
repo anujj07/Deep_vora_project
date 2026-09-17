@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ArrowLeft, Mail, MapPin } from 'lucide-react';
 
 interface ProfilePageProps {
@@ -11,11 +11,88 @@ const Label: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <p className="font-mono-tech text-xs tracking-[0.2em] text-neutral-500">{children}</p>
 );
 
+const resumeExperience = [
+  {
+    role: 'Design Project Coordinator',
+    organisation: 'Broadway Subway Project',
+    location: 'Vancouver, BC',
+    dates: 'October 2023 - Present',
+    details: [
+      'Support delivery of a $2.8B subway extension, maintaining project plans, schedules, and budgets across 10+ consultant and contractor disciplines with a 95% on-time delivery rate.',
+      'Track and forecast 2,000+ RFIs, change orders, field change requests, and design change notices; consistent documentation and communication reduced conflict-resolution time by 30%.',
+      'Review subcontract agreements, drawings, specifications, and contracts across 6 stations; coordinate labour, subtrades, consultants, inspectors, materials, equipment, and progress tracking.',
+      'Maintain project reporting and document control in Aconex and Procore for RFIs, submittals, and design deliverables.',
+    ],
+  },
+  {
+    role: 'Architectural Technologist',
+    organisation: 'Atelier Pacific Architecture',
+    location: 'Richmond, BC',
+    dates: 'June 2022 - October 2023',
+    details: [
+      'Prepared design documents, drawings, and specifications for multi-family, townhouse, and affordable housing projects from design through permit and construction.',
+      'Reviewed designs against the BC Building Code, local bylaws, and contract requirements; managed permit applications and achieved first-submission approval on a 15-unit townhouse project.',
+      'Coordinated contractors, consultants, and municipal reviewers, and ran site inspections and deficiency reviews for quality and compliance.',
+    ],
+  },
+  {
+    role: 'Graduate Teaching and Green Building Research Assistant',
+    organisation: 'University of British Columbia',
+    location: 'Vancouver, BC',
+    dates: 'January 2022 - August 2022',
+    details: ['Taught and mentored 30+ graduate students and led research for UBC\'s Green Building Action Plan across 5+ building types.'],
+  },
+];
+
+function AboutResume() {
+  const [view, setView] = useState<'work' | 'resume'>('resume');
+
+  return (
+    <main data-reveal-section className="min-h-screen bg-[var(--bg-primary)] px-5 pb-16 pt-28 text-[var(--text-primary)] sm:px-8 sm:pt-32 md:px-12 lg:px-20">
+      <div className="mx-auto max-w-7xl">
+        <nav data-reveal className="flex border-y border-black/[0.09]" aria-label="About content">
+          {(['work', 'resume'] as const).map((item) => <button key={item} type="button" onClick={() => setView(item)} aria-current={view === item ? 'page' : undefined} className={`border-b px-0 pb-3 pt-3 pr-7 font-mono-tech text-[10px] uppercase tracking-[0.16em] transition-colors sm:text-[11px] ${view === item ? 'border-current text-[var(--text-primary)]' : 'border-transparent text-[#777771] hover:text-[var(--text-primary)]'}`}>{item}</button>)}
+        </nav>
+
+        {view === 'work' ? <section aria-label="Work" /> : <section className="pt-8 sm:pt-10">
+          <div data-reveal className="grid gap-10 lg:grid-cols-12 lg:gap-8">
+            <aside className="lg:col-span-3">
+              <img src="/vancouver-cartography.png" alt="Architectural cartography" className="w-full max-w-[18rem]" />
+              <div className="mt-6 border-t border-black/[0.09] pt-4">
+                <h1 className="text-3xl font-semibold leading-[0.92] tracking-[-0.05em] sm:text-4xl">DEEP<br />VORA</h1>
+                <p className="mt-4 font-mono-tech text-[10px] uppercase tracking-[0.14em] text-[#696963]">Project Coordinator / Heavy Civil &amp; Transit Infrastructure / LEED Green Associate</p>
+                <p className="mt-6 text-sm leading-relaxed text-[#555550]">Project coordinator with 7 years in design and construction, including two years supporting delivery of a $2.8B subway extension from preconstruction through active construction.</p>
+                <div className="mt-6 space-y-1 text-xs leading-relaxed text-[#555550]"><p>Vancouver, BC / Open to Relocation</p><p>+1 (236) 808-5229</p><a href="mailto:architectdeepvora@gmail.com" className="block underline underline-offset-4 transition-opacity hover:opacity-60">architectdeepvora@gmail.com</a><a href="https://linkedin.com/in/deep-vora" target="_blank" rel="noreferrer" className="block underline underline-offset-4 transition-opacity hover:opacity-60">linkedin.com/in/deep-vora</a></div>
+              </div>
+            </aside>
+
+            <div className="lg:col-span-5">
+              <h2 className="border-b border-black/[0.09] pb-3 font-mono-tech text-[10px] uppercase tracking-[0.16em] sm:text-[11px]">Experience</h2>
+              <div className="divide-y divide-black/[0.09]">
+                {resumeExperience.map((experience) => <article key={experience.role} className="py-5"><div className="flex flex-col justify-between gap-2 sm:flex-row"><div><h3 className="text-lg font-semibold leading-tight tracking-[-0.025em]">{experience.role}</h3><p className="mt-1 text-xs text-[#555550]">{experience.organisation} / {experience.location}</p></div><p className="shrink-0 font-mono-tech text-[10px] uppercase tracking-[0.12em] text-[#777771]">{experience.dates}</p></div><ul className="mt-3 space-y-2 text-xs leading-relaxed text-[#555550]">{experience.details.map((detail) => <li key={detail} className="flex gap-2"><span aria-hidden="true">-</span><span>{detail}</span></li>)}</ul></article>)}
+              </div>
+
+              <section className="mt-8 border-t border-black/[0.09] pt-3"><h2 className="font-mono-tech text-[10px] uppercase tracking-[0.16em] sm:text-[11px]">Education</h2><div className="mt-4 space-y-4 text-sm leading-relaxed"><p><strong>Master of Urban Design</strong><br /><span className="text-[#555550]">University of British Columbia, Vancouver, BC / 2022</span></p><p><strong>Bachelor of Architecture</strong><br /><span className="text-[#555550]">Kamla Raheja Vidyanidhi Institute for Architecture, Mumbai, India / 2018</span></p></div></section>
+            </div>
+
+            <div className="lg:col-span-3 lg:col-start-10">
+              <section><h2 className="border-b border-black/[0.09] pb-3 font-mono-tech text-[10px] uppercase tracking-[0.16em] sm:text-[11px]">Expertise</h2><div className="mt-4 space-y-5 text-xs leading-relaxed text-[#555550]"><p><strong className="text-[var(--text-primary)]">Project controls</strong><br />Scheduling, budget development and control, cost forecasting, change order and scope tracking</p><p><strong className="text-[var(--text-primary)]">Design and engineering review</strong><br />RFIs, shop drawing review, design change notices, drawing, specification, and contract review</p><p><strong className="text-[var(--text-primary)]">Construction coordination</strong><br />Subcontractor and trade coordination, labour and materials tracking, site inspections, deficiency reviews</p><p><strong className="text-[var(--text-primary)]">Procurement and tendering</strong><br />Purchase orders, tender packages, purchase specifications, subcontract documents, comparative pricing</p><p><strong className="text-[var(--text-primary)]">Reporting and software</strong><br />Project status reports, technical reports, meeting minutes; Procore, Aconex, AutoCAD, Revit, MS Office</p></div></section>
+              <section className="mt-8 border-t border-black/[0.09] pt-3"><h2 className="font-mono-tech text-[10px] uppercase tracking-[0.16em] sm:text-[11px]">Certifications</h2><p className="mt-4 text-xs leading-relaxed text-[#555550]">Building Construction, BCIT<br />BC Building Code Part 3, BCIT<br />LEED Green Associate, USGBC<br />GIS: Geospatial Data, Seneca Polytechnic</p></section>
+            </div>
+          </div>
+        </section>}
+      </div>
+    </main>
+  );
+}
+
 export const ProfilePage: React.FC<ProfilePageProps> = ({ page, onBack, onContact }) => {
   const isAbout = page === 'about';
 
+  if (isAbout) return <AboutResume />;
+
   return (
-    <main data-reveal-section className="min-h-screen bg-[#111111] px-6 pb-16 pt-32 text-[#fcfbf9] md:px-12 lg:px-20">
+    <main data-reveal-section className="min-h-screen bg-[var(--bg-primary)] px-6 pb-16 pt-32 text-[var(--text-primary)] md:px-12 lg:px-20">
       <div className="mx-auto max-w-6xl">
         <button data-reveal onClick={onBack} className="mb-16 inline-flex items-center gap-2 text-xs font-mono-tech tracking-[0.16em] text-neutral-400 transition-colors hover:text-white">
           <ArrowLeft className="h-4 w-4" /> RETURN TO INDEX

@@ -25,12 +25,6 @@ export const MapVector: React.FC<MapVectorProps> = ({
   }
 }) => {
   return (
-    <svg
-      viewBox="0 0 1000 1000"
-      className="w-full h-full object-cover select-none pointer-events-none"
-      style={{ shapeRendering: 'geometricPrecision' }}
-      data-active-project={activeProject}
-    >
       <defs>
         {/* Subtle grid pattern */}
         <pattern id="archGrid" width="40" height="40" patternUnits="userSpaceOnUse">

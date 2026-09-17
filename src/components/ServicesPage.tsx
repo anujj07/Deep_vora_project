@@ -1,5 +1,6 @@
 import React from 'react';
 import { ServicesSection } from './ServicesSection';
+import { SheetFrame } from './ArchitecturePage';
 import { LEGACY_PROJECTS_REGISTRY, PROJECTS_REGISTRY, type ProjectLocation } from '../data/mapConfig';
 
 const findProject = (projects: ProjectLocation[], id: string) => projects.find((project) => project.id === id)!;
@@ -24,7 +25,8 @@ export const ServicesPage: React.FC = () => {
   const [jammingStudio, urbanTraction, housingOne, tedxGateway] = featuredProjects;
 
   return (
-    <main className="min-h-screen bg-white pb-24 text-[#111111] lg:pb-32">
+    <main className="min-h-screen bg-white pb-24 pt-20 text-[#111111] lg:pb-32">
+      <SheetFrame src="/works-map.html" title="Selected Works 2023/24" />
       <ServicesSection />
 
       <section data-reveal-section className="px-5 pb-24 sm:px-8 md:px-12 lg:px-20" aria-label="Selected project studies">

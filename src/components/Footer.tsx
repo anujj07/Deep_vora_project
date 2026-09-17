@@ -9,12 +9,12 @@ const navigationLinks = [
 ];
 
 export const Footer: React.FC = () => (
-  <footer data-reveal-section className="relative w-full bg-[#111111] px-5 pb-6 pt-16 text-[#fcfbf9] sm:px-8 sm:pt-24 md:px-12 lg:px-20 lg:pt-32">
+  <footer data-reveal-section className="relative w-full bg-[#111111] px-5 pb-6 pt-10 text-[#fcfbf9] sm:px-8 sm:pt-14 md:px-12 lg:px-20 lg:pt-16">
     <div className="mx-auto max-w-7xl">
-      <div data-reveal className="border-b border-white/15 pb-12 sm:pb-16">
+      <div data-reveal className="border-b border-white/15 pb-8 sm:pb-10">
         <p className="font-mono-tech text-[10px] uppercase tracking-[0.17em] text-white/50 sm:text-[11px]">Independent architectural practice</p>
-        <div className="mt-8 flex flex-col justify-between gap-10 lg:flex-row lg:items-end">
-          <h2 className="text-[clamp(3.75rem,10vw,9.5rem)] font-semibold leading-[0.8] tracking-[-0.075em]">DEEP<br />VORA</h2>
+        <div className="mt-6 flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
+          <h2 className="text-[clamp(2.75rem,7vw,6.5rem)] font-semibold leading-[0.8] tracking-[-0.075em]">DEEP<br />VORA</h2>
           <a href="mailto:architectdeepvora@gmail.com" className="group max-w-sm text-xl font-medium leading-tight tracking-[-0.025em] text-white sm:text-3xl">
             Let&apos;s make space for ambitious ideas.
             <span className="mt-4 block font-mono-tech text-[10px] uppercase tracking-[0.15em] text-white/55 transition-colors duration-300 group-hover:text-white sm:text-[11px]">architectdeepvora@gmail.com ↗</span>
@@ -22,7 +22,7 @@ export const Footer: React.FC = () => (
         </div>
       </div>
 
-      <div data-reveal className="grid gap-12 py-12 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8 lg:py-16">
+      <div data-reveal className="grid gap-8 py-8 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8 lg:py-10">
         <div className="lg:col-span-5">
           <p className="max-w-xs text-sm leading-relaxed text-white/60">Architecture, urban systems, and technical coordination shaped through a clear, collaborative process.</p>
         </div>
