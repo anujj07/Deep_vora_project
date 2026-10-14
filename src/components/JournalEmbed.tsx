@@ -16,7 +16,7 @@ export const JournalEmbed: React.FC = () => {
   }, [fitFrameToContent]);
 
   return (
-    <section id="work" aria-label="Journal 2026">
+    <section aria-label="Journal 2026" className="bg-[var(--bg-primary)]">
       <iframe
         ref={frameRef}
         src="/journal-2026-light.html"

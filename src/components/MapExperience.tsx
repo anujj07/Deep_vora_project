@@ -27,6 +27,7 @@ export const MapExperience: React.FC<MapExperienceProps> = ({
   const hudScaleRef = useRef<HTMLSpanElement>(null);
   const hudCoordsRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
+  const hudStageNameRef = useRef<string | null>(null);
 
   const [currentStageName, setCurrentStageName] = useState("01 — CITY");
   const [currentScaleLabel, setCurrentScaleLabel] = useState("1:75,000");
@@ -69,8 +70,15 @@ export const MapExperience: React.FC<MapExperienceProps> = ({
             }
 
             // Determine active stage for HUD telemetry
-            const stage = [...MAP_CAMERA_STAGES].reverse().find(s => progress >= s.progress) || MAP_CAMERA_STAGES[0];
-            if (stage) {
+            let stage = MAP_CAMERA_STAGES[0];
+            for (let index = MAP_CAMERA_STAGES.length - 1; index >= 0; index -= 1) {
+              if (progress >= MAP_CAMERA_STAGES[index].progress) {
+                stage = MAP_CAMERA_STAGES[index];
+                break;
+              }
+            }
+            if (hudStageNameRef.current !== stage.stageName) {
+              hudStageNameRef.current = stage.stageName;
               setCurrentStageName(stage.stageName);
               setCurrentScaleLabel(stage.cartoScale);
             }
@@ -239,7 +247,7 @@ export const MapExperience: React.FC<MapExperienceProps> = ({
   return (
     <div
       ref={containerRef}
-      className="relative w-full bg-[#fcfbf9] text-[#121212]"
+      className="relative w-full bg-white text-[#121212]"
       style={{ height: "420vh" }}
     >
       {/* Sticky Viewport Container */}
@@ -250,7 +258,7 @@ export const MapExperience: React.FC<MapExperienceProps> = ({
         {/* ===================================================================== */}
         {/* HUD TELEMETRY BAR: TOP */}
         {/* ===================================================================== */}
-        <div className="relative z-40 w-full px-6 md:px-12 pt-6 pb-4 flex items-center justify-between pointer-events-auto border-b border-black/[0.04] bg-[#fcfbf9]/80 backdrop-blur-md">
+        <div className="relative z-40 w-full px-6 md:px-12 pt-6 pb-4 flex items-center justify-between pointer-events-auto border-b border-black/[0.04] bg-white/80 backdrop-blur-md">
           {/* Left: Studio & Cartography Title */}
           <div className="flex items-center space-x-4">
             <div className="w-2.5 h-2.5 rounded-full bg-[#111111] animate-pulse" />
@@ -335,7 +343,6 @@ export const MapExperience: React.FC<MapExperienceProps> = ({
                     onClick={() => handleProjectSwitch(project)}
                     aria-pressed={isActive}
                     aria-label={`View ${project.title}`}
-                    data-cursor="VIEW PROJECT"
                     className="group absolute z-10 -translate-x-1/2 -translate-y-1/2 text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black"
                     style={{ left: `${project.coords.x / 10}%`, top: `${project.coords.y / 10}%` }}
                   >
@@ -455,7 +462,7 @@ export const MapExperience: React.FC<MapExperienceProps> = ({
         {/* ===================================================================== */}
         {/* HUD BOTTOM BAR: CONTROLS & PROJECT SELECTOR */}
         {/* ===================================================================== */}
-        <div className="relative z-40 w-full px-6 md:px-12 py-4 flex flex-col sm:flex-row items-center justify-between border-t border-black/[0.04] bg-[#fcfbf9]/85 backdrop-blur-md pointer-events-auto gap-4">
+        <div className="relative z-40 w-full px-6 md:px-12 py-4 flex flex-col sm:flex-row items-center justify-between border-t border-black/[0.04] bg-white/85 backdrop-blur-md pointer-events-auto gap-4">
           {/* Scroll instruction indicator */}
           <div className="flex items-center space-x-3">
             <div className="w-5 h-8 rounded-full border border-black/20 flex items-start justify-center p-1">

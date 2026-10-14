@@ -45,6 +45,7 @@ export interface ProjectImage {
   id: string;
   imageUrl: string;
   caption: string;
+  aspectRatio: number;
 }
 
 export const MAP_CAMERA_STAGES: CameraStage[] = [
@@ -155,9 +156,9 @@ export const MAP_CAMERA_STAGES: CameraStage[] = [
 ];
 
 export const URBAN_TRACTION_IMAGES: readonly ProjectImage[] = [
-  { id: 'URBAN_TRACTION_01_KEY_MASTERPLAN', imageUrl: '/projects/urban-traction/URBAN_TRACTION_01_KEY_MASTERPLAN.png', caption: '01 — Overall Vision / Key Masterplan' },
-  { id: 'URBAN_TRACTION_02_EXISTING_PROPOSED', imageUrl: '/projects/urban-traction/URBAN_TRACTION_02_EXISTING_PROPOSED.png', caption: '02 — Street Transformation / Existing → Proposed' },
-  { id: 'URBAN_TRACTION_03_EXISTING_PROPOSED', imageUrl: '/projects/urban-traction/URBAN_TRACTION_03_EXISTING_PROPOSED.png', caption: '03 — Public Realm Transformation / Existing → Proposed' },
+  { id: 'URBAN_TRACTION_01_KEY_MASTERPLAN', imageUrl: '/projects/urban-traction/URBAN_TRACTION_01_KEY_MASTERPLAN.png', aspectRatio: 1.982, caption: '01 — Overall Vision / Key Masterplan' },
+  { id: 'URBAN_TRACTION_02_EXISTING_PROPOSED', imageUrl: '/projects/urban-traction/URBAN_TRACTION_02_EXISTING_PROPOSED.png', aspectRatio: 3.244, caption: '02 — Street Transformation / Existing → Proposed' },
+  { id: 'URBAN_TRACTION_03_EXISTING_PROPOSED', imageUrl: '/projects/urban-traction/URBAN_TRACTION_03_EXISTING_PROPOSED.png', aspectRatio: 3.166, caption: '03 — Public Realm Transformation / Existing → Proposed' },
 ];
 
 export const URBAN_TRACTION_SCROLL_IMAGES: readonly string[] = [
@@ -168,29 +169,25 @@ export const URBAN_TRACTION_SCROLL_IMAGES: readonly string[] = [
 ];
 
 export const TEDX_GATEWAY_IMAGES: readonly ProjectImage[] = [
-  { id: 'TEDX_GATEWAY_01_FINAL_STAGE', imageUrl: '/projects/tedx-gateway/TEDX_GATEWAY_01_FINAL_STAGE.png', caption: 'FINAL STAGE / Dynamic tessellated backdrop and lighting experience.' },
-  { id: 'TEDX_GATEWAY_02_DESIGN_FABRICATION', imageUrl: '/projects/tedx-gateway/TEDX_GATEWAY_02_DESIGN_FABRICATION.png', caption: 'DESIGN + FABRICATION / 15 modular panels developed as a coordinated system for fabrication, transportation and on-site assembly.' },
-];
-
-export const CATALYST_IMAGES: readonly ProjectImage[] = [
-  { id: 'CATALYST_01_MASTERPLAN', imageUrl: '/projects/catalyst/CATALYST_01_MASTERPLAN.png', caption: '01 — Proposed neighbourhood masterplan' },
-  { id: 'CATALYST_02_DESIGN_INTENT', imageUrl: '/projects/catalyst/CATALYST_02_DESIGN_INTENT.png', caption: '02 — Design intent diagrams' },
+  { id: 'TEDX_GATEWAY_01_FINAL_STAGE', imageUrl: '/projects/tedx-gateway/TEDX_GATEWAY_01_FINAL_STAGE.png', aspectRatio: 2.284, caption: 'FINAL STAGE / Undulating tessellated geometry with integrated colour lighting.' },
+  { id: 'TEDX_GATEWAY_02_DESIGN_FABRICATION', imageUrl: '/projects/tedx-gateway/TEDX_GATEWAY_02_DESIGN_FABRICATION.png', aspectRatio: 2.142, caption: 'DESIGN + FABRICATION / 15 modules, approximately 4 feet wide each, developed for fabrication, transport, and on-site assembly.' },
 ];
 
 export const MITHCHOWKI_TRANSFORMATION_IMAGES: readonly ProjectImage[] = [
-  { id: 'MITHCHOWKI_TRANSFORMATION_01', imageUrl: '/projects/mithchowki-transformation/MITHCHOWKI_TRANSFORMATION_01.png', caption: '01 — Junction transformation' },
+  { id: 'MITHCHOWKI_TRANSFORMATION_01', imageUrl: '/projects/mithchowki-transformation/MITHCHOWKI_TRANSFORMATION_01.png', aspectRatio: 1.413, caption: '01 — Junction transformation' },
 ];
 
 export const LOOP_IMAGES: readonly ProjectImage[] = [
-  { id: 'LOOP_01_VISION', imageUrl: '/projects/loop/LOOP_01_VISION.png', caption: '01 — Neighbourhood vision' },
+  { id: 'LOOP_01_VISION', imageUrl: '/projects/loop/LOOP_01_VISION.jpg', aspectRatio: 1.413, caption: '01 — Neighbourhood vision' },
+];
+
+export const HOUSING_ONE_IMAGES: readonly ProjectImage[] = [
+  { id: 'HOUSING_ONE_KEY', imageUrl: '/projects/housing-one/KEY_IMAGE_HOUSING_ONE.JPG', aspectRatio: 2.069, caption: '01 — Housing and greenway framework' },
+  { id: 'HOUSING_ONE_STREET', imageUrl: '/projects/housing-one/HOUSING_IMAGE_01.png', aspectRatio: 2.312, caption: '02 — Street-level residential view' },
+  { id: 'HOUSING_ONE_LANDSCAPE', imageUrl: '/projects/housing-one/HOUSING_IMAGE_02.png', aspectRatio: 2.375, caption: '03 — Shared landscape and housing view' },
 ];
 
 export const PROJECTS_REGISTRY: ProjectLocation[] = [
-  {
-    id: 'green-catalyst', title: 'CATALYST', subtitle: 'Mixed Use Development', client: 'GREEN CATALYST DEVELOPMENT', category: 'Mixed Use Development', year: '2024', area: 'Vancouver', city: 'Canada',
-    coords: { lat: '49°16\'42.0"N', lng: '123°06\'52.0"W', x: 760, y: 350 }, highlightArea: 'Vancouver',
-    description: 'A mixed-use urban development that connects landscape, living, and public life through layered green infrastructure.', heroImage: CATALYST_IMAGES[0].imageUrl, galleryImages: CATALYST_IMAGES, camera: { targetScale: 3.4, targetX: 76, targetY: 35 },
-  },
   {
     id: 'loop', title: 'LOOP', subtitle: 'Neighbourhood Planning and Design', client: 'LOOP PLANNING COLLECTIVE', category: 'Neighbourhood Planning & Design', year: '2024', area: 'Victoria', city: 'Canada',
     coords: { lat: '48°25\'13.0"N', lng: '123°21\'43.0"W', x: 520, y: 245 }, highlightArea: 'Victoria',
@@ -202,19 +199,19 @@ export const PROJECTS_REGISTRY: ProjectLocation[] = [
     description: 'A transformation strategy that reimagines the existing urban fabric through connected streets, public space, green infrastructure, mobility and mixed-use development.', heroImage: URBAN_TRACTION_IMAGES[0].imageUrl, galleryImages: URBAN_TRACTION_IMAGES, focus: 'Urban Transformation · Streetscape · Public Realm · Green Infrastructure · Mobility · Mixed-Use Development', camera: { targetScale: 3.5, targetX: 79, targetY: 45 },
   },
   {
-    id: 'student-community-centre', title: 'STUDENT COMMUNITY CENTRE', subtitle: 'Institute Design', client: 'BHAVANS CAMPUS', category: 'Institute Design', year: '2024', area: 'Andheri', city: 'Mumbai, India',
-    coords: { lat: '19°07\'37.0"N', lng: '72°50\'03.0"E', x: 470, y: 570 }, highlightArea: 'Bhavans Campus',
-    description: 'A campus commons designed as an adaptable social heart for student learning, gathering, and creative exchange.', heroImage: 'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=2400&q=90', camera: { targetScale: 3, targetX: 47, targetY: 57 },
+    id: 'production-design', title: 'Production Design', subtitle: 'Production / Set Design — Live Music Performance', client: 'PARTHIV GOHIL', category: 'Production / Set Design', year: '2024', area: 'Kutch', city: 'Gujarat, India',
+    coords: { lat: '19°07\'37.0"N', lng: '72°50\'03.0"E', x: 470, y: 570 }, highlightArea: 'Kutch, Gujarat',
+    description: 'A culturally rooted live-performance set for Parthiv Gohil, drawing on Kutchi-Gujarati visual culture through a circular rangoli floor, carved-timber backdrops, and layered lighting and props.', heroImage: '/projects/production-design/pd_key.png', camera: { targetScale: 3, targetX: 47, targetY: 57 },
   },
   {
-    id: 'tedx-gateway', title: 'TEDx GATEWAY STAGE DESIGN', subtitle: 'Stage Design / Fabrication', client: 'TEDx GATEWAY', category: 'Stage Design / Fabrication', year: '2023', area: 'Mumbai', city: 'India',
+    id: 'tedx-gateway', title: 'TEDx Gateway — Stage Design', subtitle: 'Stage / Set Design', client: 'TEDx GATEWAY', category: 'Stage / Set Design', year: '2023', area: 'Mumbai', city: 'India',
     coords: { lat: '18°55\'38.0"N', lng: '72°49\'15.0"E', x: 355, y: 670 }, highlightArea: 'Mumbai',
-    description: 'A dynamic and free-flowing stage design inspired by tessellations, creating an undulating backdrop that represents the free flow of ideas.', heroImage: TEDX_GATEWAY_IMAGES[0].imageUrl, galleryImages: TEDX_GATEWAY_IMAGES, focus: '60-foot-long stage · 15 modular 4-foot partitions · Wood + MDF framework · Central back-projection screen · 3-day on-site assembly and finishing · Dynamic colored lighting', camera: { targetScale: 2.7, targetX: 35, targetY: 67 },
+    description: 'An undulating, tessellated stage concept expressing the free flow of ideas through modular construction, rear projection, and programmable colour lighting.', heroImage: TEDX_GATEWAY_IMAGES[0].imageUrl, galleryImages: TEDX_GATEWAY_IMAGES, focus: '60-foot stage · 15 modules, approximately 4 feet each · Lightweight wood framework with MDF cladding · Rear-projection screen · Plaster-and-paint finish · Programmable colour lighting · Three-day on-site fabrication, assembly, and finishing', camera: { targetScale: 2.7, targetX: 35, targetY: 67 },
   },
   {
-    id: 'mithchowki-transformation', title: 'MITHCHOWKI TRANSFORMATION', subtitle: 'Street Design', client: 'MALAD STREET INITIATIVE', category: 'Street Design', year: '2024', area: 'Malad Mithchowki Junction', city: 'Mumbai, India',
-    coords: { lat: '19°11\'33.0"N', lng: '72°50\'06.0"E', x: 610, y: 520 }, highlightArea: 'Mithchowki Junction',
-    description: 'A street transformation that rebalances a busy junction around safer movement, shade, and public life.', heroImage: MITHCHOWKI_TRANSFORMATION_IMAGES[0].imageUrl, galleryImages: MITHCHOWKI_TRANSFORMATION_IMAGES, camera: { targetScale: 3.2, targetX: 61, targetY: 52 },
+    id: 'mithchowki-transformation', title: 'Mith Chowki Junction Transformation', subtitle: 'Urban Road-Safety / Street Redesign', client: 'BLOOMBERG INITIATIVE FOR GLOBAL ROAD SAFETY', category: 'Urban Road-Safety / Street Redesign', year: '2024', area: 'Mith Chowki Junction, Malad', city: 'Mumbai, India',
+    coords: { lat: '19°11\'33.0"N', lng: '72°50\'06.0"E', x: 610, y: 520 }, highlightArea: 'Mith Chowki Junction',
+    description: 'A safer, more inclusive junction redesign shaped by traffic and road-user analysis, site surveys, inventory mapping, and stakeholder interviews.', heroImage: MITHCHOWKI_TRANSFORMATION_IMAGES[0].imageUrl, galleryImages: MITHCHOWKI_TRANSFORMATION_IMAGES, camera: { targetScale: 3.2, targetX: 61, targetY: 52 },
   },
 ];
 
@@ -269,22 +266,23 @@ export const LEGACY_PROJECTS_REGISTRY: ProjectLocation[] = [
   },
   {
     id: "housing-one",
-    title: "HOUSING ONE — CATALYST",
-    subtitle: "Modular High-Density Timber Residential Prototype",
-    client: "URBAN METROPOLIS FOUNDATION",
-    category: "Residential Architecture",
+    title: "AFFORDABLE HOUSING",
+    subtitle: "Academic Project ? Master of Urban Design, University of British Columbia",
+    client: "ACADEMIC PROJECT — UNIVERSITY OF BRITISH COLUMBIA",
+    category: "Academic Project / Mixed-Use Affordable Neighbourhood",
     year: "2024",
-    area: "Bandra West",
-    city: "Mumbai",
+    area: "Broadway Corridor & Arbutus Greenway",
+    city: "Vancouver, BC",
     coords: {
       lat: "19°03'14.0\"N",
       lng: "72°49'48.0\"E",
       x: 440,
       y: 530,
     },
-    highlightArea: "Bandra Reclamation",
-    description: "A bioclimatic mass-timber residential cluster featuring porous breeze corridors, stepped communal sky terraces, and integrated rainwater collection.",
-    heroImage: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=90",
+    highlightArea: "Broadway Corridor & Arbutus Greenway",
+    description: "An academic proposal for a 100% affordable, pedestrian-first mixed-use neighbourhood, structured by connected green networks, pedestrian routes, and public spaces.",
+    heroImage: HOUSING_ONE_IMAGES[0].imageUrl,
+    galleryImages: HOUSING_ONE_IMAGES,
     camera: {
       targetScale: 13.0,
       targetX: 44.0,

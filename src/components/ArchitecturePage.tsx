@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { JournalEmbed } from './JournalEmbed';
 
 type SheetFrameProps = {
   src: string;
@@ -48,5 +49,6 @@ export const ArchitecturePage = () => (
   <main className="min-h-screen bg-[var(--bg-primary)] pt-20">
     <SheetFrame src="/catalyst-sheet.html" title="Catalyst - Collective Housing" />
     <SheetFrame src="/roads-public-realm.html" title="Roads not as conduits, but as public realm" />
+    <JournalEmbed />
   </main>
 );

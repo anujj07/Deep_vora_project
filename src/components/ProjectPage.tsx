@@ -1,125 +1,350 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { JAMMING_STUDIO_IMAGES } from '../data/jammingStudioData';
 import { LEGACY_PROJECTS_REGISTRY, PROJECTS_REGISTRY, type ProjectLocation } from '../data/mapConfig';
-import { EditorialProjectNarrative } from './work/EditorialProjectNarrative';
+import { WORK_WRITE_UPS } from '../data/workWriteUps';
+
+const HousingOneStepSequences = React.lazy(() => import('./projects/housing-one/HousingOneStepSequences').then((module) => ({ default: module.HousingOneStepSequences })));
+const JammingStudioCollage = React.lazy(() => import('./projects/jamming-studio/JammingStudioCollage').then((module) => ({ default: module.JammingStudioCollage })));
+const LoopCollage = React.lazy(() => import('./projects/loop/LoopCollage').then((module) => ({ default: module.LoopCollage })));
+const LoopRow = React.lazy(() => import('./projects/loop/LoopRow').then((module) => ({ default: module.LoopRow })));
+const RoadNetwork = React.lazy(() => import('./projects/urban-traction/RoadNetwork').then((module) => ({ default: module.RoadNetwork })));
+const UrbanTractionCollage = React.lazy(() => import('./projects/urban-traction/UrbanTractionCollage').then((module) => ({ default: module.UrbanTractionCollage })));
+const UrbanTractionComparisons = React.lazy(() => import('./projects/urban-traction/UrbanTractionComparisons').then((module) => ({ default: module.UrbanTractionComparisons })));
+const UrbanTractionStudy = React.lazy(() => import('./projects/urban-traction/UrbanTractionStudy').then((module) => ({ default: module.UrbanTractionStudy })));
+const ProductionDesignCollage = React.lazy(() => import('./projects/production-design/ProductionDesignCollage').then((module) => ({ default: module.ProductionDesignCollage })));
+
+gsap.registerPlugin(ScrollTrigger);
+
+const formatProjectTitle = (title: string) => title.split(' ').map((word) => (
+  word.toLowerCase() === 'tedx'
+    ? 'TEDx'
+    : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+)).join(' ');
+
+const urbanTractionSequenceLayoutCss = `
+html,body,#main{height:100%;min-height:100%}
+body{display:block;min-height:100%;font-family:Inter,-apple-system,'Helvetica Neue',Arial,sans-serif;text-align:center}
+#main{display:block;width:100%}
+.seq{display:flex;width:100%;height:100%;min-height:100%;flex-direction:column;max-width:none;margin:0 auto;padding:clamp(18px,3.2vh,44px) clamp(18px,4vw,48px)}
+.seq__head{flex:none;text-align:center;margin-bottom:clamp(20px,2.6vw,34px)}
+.seq__head h2{font-family:Inter,-apple-system,'Helvetica Neue',Arial,sans-serif;font-size:12.5px;font-weight:500;line-height:1.2;letter-spacing:.16em;text-transform:uppercase;color:#1a1a1a}
+.seq__head p{font-family:Inter,-apple-system,'Helvetica Neue',Arial,sans-serif;font-size:11px;font-weight:400;line-height:1.4;letter-spacing:.12em;text-transform:uppercase;color:#8a8a8a;margin-top:6px}
+.stage{flex:none;width:min(100%,632px);aspect-ratio:1486/829;height:auto;max-width:none;margin-inline:auto}
+.caption{flex:none;min-height:74px;text-align:center;margin-top:clamp(18px,2.4vw,30px);padding-inline:clamp(0px,6vw,110px)}
+.caption p{font-family:Inter,-apple-system,'Helvetica Neue',Arial,sans-serif;font-size:13.5px;font-weight:400;line-height:1.55;letter-spacing:0;color:#1a1a1a}
+.caption .key{font-weight:500}
+.counter{flex:none;text-align:center;margin-top:8px;padding-top:0;font-family:Inter,-apple-system,'Helvetica Neue',Arial,sans-serif;font-size:13px;font-weight:400;line-height:1.4;letter-spacing:.06em;color:#1a1a1a}
+.counter .now{color:#8a8a8a}
+.track{flex:none;display:flex;gap:4px;justify-content:center;margin-top:14px}
+.hint{flex:none;text-align:center;margin-top:16px;padding-bottom:4px;font-family:Inter,-apple-system,'Helvetica Neue',Arial,sans-serif;font-size:10px;font-weight:400;line-height:1.4;letter-spacing:.14em;text-transform:uppercase;color:#8a8a8a}
+`;
 
 const findProject = (projects: ProjectLocation[], id: string) => projects.find((project) => project.id === id)!;
-
-const projectOrder = ['jamming-studio', 'urban-traction', 'housing-one', 'tedx-gateway', 'green-catalyst', 'mithchowki-transformation', 'loop'];
 const projectsById: Record<string, ProjectLocation> = {
   'jamming-studio': findProject(LEGACY_PROJECTS_REGISTRY, 'jamming-studio'),
   'urban-traction': findProject(PROJECTS_REGISTRY, 'urban-traction'),
   'housing-one': findProject(LEGACY_PROJECTS_REGISTRY, 'housing-one'),
   'tedx-gateway': findProject(PROJECTS_REGISTRY, 'tedx-gateway'),
-  'green-catalyst': findProject(PROJECTS_REGISTRY, 'green-catalyst'),
   'mithchowki-transformation': findProject(PROJECTS_REGISTRY, 'mithchowki-transformation'),
-  'loop': findProject(PROJECTS_REGISTRY, 'loop'),
+  'production-design': findProject(PROJECTS_REGISTRY, 'production-design'),
+  loop: findProject(PROJECTS_REGISTRY, 'loop'),
 };
 
-const projectStories: Record<string, { heading: string; paragraphs: string[] }> = {
-  'jamming-studio': {
-    heading: 'A Room Tuned for Creative Energy',
-    paragraphs: [
-      'Jamming Studio was conceived as a focused, high-performance room for making music. The design brings acoustic control, technical infrastructure, and a strong visual identity into one compact creative environment.',
-      'Layered acoustic panels shape the room’s character while bold geometric colour blocking gives the space a sense of rhythm and direction. Integrated lighting supports the atmosphere of a working studio—precise when it needs to be, expressive when the session takes over.',
-    ],
-  },
-  'urban-traction': {
-    heading: 'Making the Street a Shared Resource',
-    paragraphs: [
-      'Urban Traction reframes the everyday street as a connected public landscape. The proposal brings movement, green infrastructure, and active edges together to make space for a more social and resilient urban life.',
-      'Rather than treating mobility and public realm as separate systems, the strategy uses each to strengthen the other: more comfortable walking routes, legible connections, and places to pause within a changing neighbourhood fabric.',
-    ],
-  },
-  'housing-one': {
-    heading: 'Density with Room to Breathe',
-    paragraphs: [
-      'Housing One explores a more generous model of high-density living. A mass-timber residential cluster is organized around porous breezeways, shared terraces, and daily encounters between neighbours.',
-      'The project uses its climate as an active design material. Stepped communal spaces, shade, and rainwater collection work together to give the housing a lighter environmental footprint and a stronger relationship to collective life.',
-    ],
-  },
-  'tedx-gateway': {
-    heading: 'A Stage for Ideas in Motion',
-    paragraphs: [
-      'TEDx Gateway Stage Design translates the energy of exchange into a spatial backdrop. A modular tessellated system creates an undulating field behind speakers—dynamic enough for the event, but disciplined enough to fabricate, transport, and assemble.',
-      'The stage was developed as a coordinated performance environment, balancing projection, coloured light, visibility, and a clear central focus. Its geometry changes with the light, giving each moment on stage a distinct sense of depth.',
-    ],
-  },
-  'loop': {
-    heading: 'A Resilient Neighbourhood, Connected by Everyday Life',
-    paragraphs: [
-      'What if James Bay became a hub for socio-cultural activity that not only boosts local and international tourism, but also transforms it into a resilient neighbourhood? LOOP responds by connecting key activity anchors with the surrounding socio-ecological infrastructure network.',
-      'The proposal recognizes three complementary corridors. A mobility corridor improves pedestrian and public-transportation connectivity; a commercial corridor supports local businesses, active streets, and community activity; and a green corridor strengthens ecological connections, public spaces, and landscape networks.',
-      'Programmes for eco-tourism and community interaction create vibrant gathering spaces and stepping stones of activity throughout the neighbourhood. Together, these interventions connect James Bay’s waterways, public spaces, cultural destinations, and neighbourhood communities into one continuous network—connected, vibrant, resilient, and socially active.',
-    ],
-  },
+type DetailImage = { imageUrl: string; caption: string; aspectRatio: number };
+const jammingImages: DetailImage[] = [
+  { imageUrl: JAMMING_STUDIO_IMAGES.hero, caption: '01 — Jamming Studio', aspectRatio: 1.25 },
+  { imageUrl: JAMMING_STUDIO_IMAGES.spatial, caption: '02 — Acoustic studio view', aspectRatio: 1.25 },
+  { imageUrl: JAMMING_STUDIO_IMAGES.detail, caption: '03 — Studio lighting detail', aspectRatio: 1.25 },
+  { imageUrl: '/projects/jamming-studio/JAMMING_STUDIO_04_HIGH_QUALITY.png', caption: '04 — Acoustic performance space', aspectRatio: 1.248 },
+  { imageUrl: '/projects/jamming-studio/JAMMING_STUDIO_05.png', caption: '05 — Studio interior', aspectRatio: 1.391 },
+];
+
+const projectImages = (project: ProjectLocation): DetailImage[] => {
+  if (project.id === 'jamming-studio') return jammingImages;
+  if (project.id === 'production-design') return [{ imageUrl: project.heroImage, caption: '01 — Production Design', aspectRatio: 2.25 }];
+  return (project.galleryImages ?? []).map(({ imageUrl, caption, aspectRatio }) => ({ imageUrl, caption, aspectRatio }));
 };
 
-const projectImages = (project: ProjectLocation) => {
-  if (project.id === 'jamming-studio') return [JAMMING_STUDIO_IMAGES.hero, JAMMING_STUDIO_IMAGES.spatial, JAMMING_STUDIO_IMAGES.detail];
-  return [project.heroImage, ...(project.galleryImages?.map((image) => image.imageUrl) ?? [])]
-    .filter((image, index, images) => images.indexOf(image) === index);
+const SequenceFrame: React.FC<{ src: string; title: string; className: string; contentCss?: string; disableAutoHeight?: boolean; disableScroll?: boolean; preserveMinHeight?: boolean }> = ({ src, title, className, contentCss, disableAutoHeight, disableScroll, preserveMinHeight }) => {
+  const frameRef = useRef<HTMLIFrameElement>(null);
+
+  useEffect(() => {
+    const frame = frameRef.current;
+    if (!frame) return;
+    let observer: ResizeObserver | undefined;
+    const applyContentCss = () => {
+      if (!contentCss) return;
+      const doc = frame.contentDocument;
+      if (!doc?.head) return;
+      let style = doc.head.querySelector<HTMLStyleElement>('style[data-parent-layout-overrides]');
+      if (!style) {
+        style = doc.createElement('style');
+        style.dataset.parentLayoutOverrides = '';
+        doc.head.appendChild(style);
+      }
+      style.textContent = contentCss;
+    };
+    const fitFrame = () => {
+      if (disableAutoHeight) return;
+      const doc = frame.contentDocument;
+      if (!doc?.body) return;
+      if (preserveMinHeight) frame.style.height = '';
+      const minHeight = preserveMinHeight ? frame.getBoundingClientRect().height : 0;
+      const height = Math.max(doc.body.scrollHeight, doc.body.offsetHeight, minHeight);
+      if (height > 0) frame.style.height = `${height}px`;
+    };
+    const observeContent = () => {
+      applyContentCss();
+      fitFrame();
+      const doc = frame.contentDocument;
+      if (doc?.body && typeof ResizeObserver !== 'undefined') {
+        observer?.disconnect();
+        observer = new ResizeObserver(fitFrame);
+        observer.observe(doc.body);
+      }
+    };
+    frame.addEventListener('load', observeContent);
+    window.addEventListener('resize', fitFrame);
+    return () => {
+      observer?.disconnect();
+      frame.removeEventListener('load', observeContent);
+      window.removeEventListener('resize', fitFrame);
+    };
+  }, [contentCss, disableAutoHeight, preserveMinHeight]);
+
+  return <iframe ref={frameRef} src={src} title={title} loading="lazy" scrolling={disableScroll ? 'no' : undefined} className={className} />;
 };
 
-interface ProjectPageProps {
-  projectId: string;
-}
+interface ProjectPageProps { projectId: string; }
 
 export const ProjectPage: React.FC<ProjectPageProps> = ({ projectId }) => {
+  const rootRef = useRef<HTMLElement>(null);
+  const mithchowkiVideoRef = useRef<HTMLVideoElement>(null);
   const project = projectsById[projectId];
-  if (!project) {
-    return <section className="min-h-screen bg-white px-5 pb-16 pt-28 sm:px-8 sm:pt-32 md:px-12 lg:px-20"><p className="font-mono-tech text-xs uppercase tracking-[0.15em] text-[#686862]">Project not found</p></section>;
-  }
-  const images = projectImages(project);
-  const index = projectOrder.indexOf(projectId);
-  const nextProject = projectsById[projectOrder[(index + 1) % projectOrder.length]];
-  const story = projectStories[project.id] ?? { heading: project.subtitle, paragraphs: [project.description] };
-  const verticalImage = images.find((image) => !image.includes('images.unsplash.com'))
-    ?? (project.id === 'housing-one' ? findProject(PROJECTS_REGISTRY, 'green-catalyst').heroImage : undefined);
+  const writeUp = WORK_WRITE_UPS[projectId];
 
+  useEffect(() => {
+    if (projectId !== 'mithchowki-transformation') return;
+    const video = mithchowkiVideoRef.current;
+    if (!video) return;
+    const startTime = 14;
+    const endTime = 38;
+    const setStartTime = () => { video.currentTime = startTime; };
+    const constrainTime = () => {
+      if (video.currentTime < startTime) video.currentTime = startTime;
+      if (video.currentTime > endTime) video.currentTime = endTime;
+    };
+    const stopAtEnd = () => {
+      if (video.currentTime >= endTime) {
+        video.currentTime = endTime;
+        video.pause();
+      }
+    };
+    const restartFromStart = () => {
+      if (video.currentTime >= endTime) video.currentTime = startTime;
+    };
+    video.addEventListener('loadedmetadata', setStartTime);
+    video.addEventListener('seeking', constrainTime);
+    video.addEventListener('timeupdate', stopAtEnd);
+    video.addEventListener('play', restartFromStart);
+    if (video.readyState >= 1) setStartTime();
+    return () => {
+      video.removeEventListener('loadedmetadata', setStartTime);
+      video.removeEventListener('seeking', constrainTime);
+      video.removeEventListener('timeupdate', stopAtEnd);
+      video.removeEventListener('play', restartFromStart);
+    };
+  }, [projectId]);
+
+  useEffect(() => {
+    if (projectId !== 'mithchowki-transformation') return;
+    const video = mithchowkiVideoRef.current;
+    if (!video || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) video.pause();
+    }, { threshold: 0.01 });
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, [projectId]);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const context = gsap.context(() => {
+      const textBlocks = gsap.utils.toArray<HTMLElement>('.project-detail__reveal-text', root);
+      gsap.set(textBlocks, { autoAlpha: 0, y: 14 });
+      textBlocks.forEach((block) => gsap.to(block, { autoAlpha: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: block, start: 'top 85%', once: true } }));
+      const plates = gsap.utils.toArray<HTMLElement>('.project-detail__plate', root);
+      plates.forEach((plate) => {
+        const image = plate.querySelector('img');
+        gsap.set(plate, { clipPath: 'inset(0 0 100% 0)' });
+        gsap.set(image, { scale: 1.06 });
+        const timeline = gsap.timeline({ scrollTrigger: { trigger: plate, start: 'top 85%', once: true } });
+        timeline.to(plate, { clipPath: 'inset(0 0 0% 0)', duration: 1.1, ease: 'power3.out' }).to(image, { scale: 1, duration: 1.1, ease: 'power3.out' }, '<');
+      });
+      const timeout = window.setTimeout(() => gsap.set([...textBlocks, ...plates], { autoAlpha: 1, y: 0, clipPath: 'inset(0 0 0 0)' }), 3000);
+      const refresh = () => ScrollTrigger.refresh();
+      window.addEventListener('load', refresh, { once: true });
+      return () => { window.clearTimeout(timeout); window.removeEventListener('load', refresh); };
+    }, root);
+    return () => context.revert();
+  }, [projectId]);
+
+  if (!project) return <section className="min-h-screen bg-[var(--bg-primary)] px-5 pb-16 pt-28"><p className="font-mono-tech text-xs uppercase tracking-[0.15em] text-[var(--text-secondary)]">Project not found</p></section>;
+
+  const images = projectImages(project);
+  const [keyImage, ...galleryImages] = images;
+  const title = writeUp?.title ?? project.title;
+  const facts = writeUp?.facts ?? [];
+  const location = facts.find(([label]) => label === 'Location')?.[1];
   return (
-    <section className="min-h-screen bg-white px-5 pb-16 pt-28 text-[#111111] sm:px-8 sm:pt-32 md:px-12 lg:px-20 lg:pb-24">
-      <div data-reveal-section className="mx-auto max-w-[105rem]">
-        {verticalImage && (
-          <figure data-reveal className="mx-auto mb-16 max-w-7xl sm:mb-24 lg:mb-28">
-            <div className="aspect-[12/5] w-full overflow-hidden">
-              <img src={verticalImage} alt={`${project.title} — project view`} loading="eager" className="h-full w-full object-cover" />
-            </div>
-          </figure>
-        )}
-        <header data-reveal>
-          <a href="/work" className="font-mono-tech text-[10px] uppercase tracking-[0.16em] text-[#686862] transition-colors hover:text-black sm:text-[11px]">Work / {String(index + 1).padStart(2, '0')}</a>
-          <h1 className="mt-7 max-w-5xl text-4xl font-semibold leading-[1.03] tracking-[-0.04em] sm:text-6xl lg:text-7xl">{project.title}</h1>
-          <p className="mt-5 text-base text-[#565650] sm:text-lg">{project.area}, {project.city}</p>
+    <section ref={rootRef} className="project-detail min-h-screen bg-white pb-16 pt-10 text-[#121212] sm:pb-24 sm:pt-21">
+      <noscript><style>{'.project-detail__reveal-text,.project-detail__plate{opacity:1!important;transform:none!important;clip-path:none!important}'}</style></noscript>
+      {keyImage && <figure className={`project-detail__plate project-detail__key w-full ${projectId === 'jamming-studio' ? 'project-detail__key--jamming' : projectId === 'urban-traction' ? 'project-detail__key--urban-traction' : projectId === 'housing-one' ? 'project-detail__key--housing' : 'h-[min(44vw,670px)]'}`} style={{ '--ar': 2.25 } as React.CSSProperties}>{projectId === 'housing-one' && <img className="project-detail__key-housing-blur" src={keyImage.imageUrl} alt="" aria-hidden="true" /> }<img className={projectId === 'housing-one' ? 'project-detail__key-housing-image' : undefined} src={projectId === 'jamming-studio' ? '/projects/jamming-studio/JAMMING_STUDIO_KEY.png' : projectId === 'urban-traction' ? '/projects/urban-traction/URBAN_TRACTION_KEY_TRY.png' : keyImage.imageUrl} alt={`${title} — project view`} loading="eager" /></figure>}
+      <div className="mx-auto max-w-[1400px] px-5 sm:px-10 lg:px-0">
+        <header className="project-detail__reveal-text mt-10 sm:mt-15">
+          <div>
+            <h1 className="mt-2 max-w-[720px] text-4xl font-semibold leading-[1.02] tracking-[-0.04em] sm:text-6xl lg:text-[4.25rem]">{formatProjectTitle(title)}</h1>
+            {location && <p className="mt-2 text-sm text-[#121212] sm:text-base">{location}</p>}
+          </div>
+          <div className="mt-2 grid grid-cols-1 gap-9 sm:mt-4 lg:grid-cols-12 lg:gap-20">
+            {writeUp?.narrative && <div className="lg:col-span-7"><p className="font-narrative max-w-[750px] text-base leading-[1.50] text-[#121212]">{writeUp.narrative}</p></div>}
+            {facts.length > 0 && <div className="project-detail__facts self-start mt-16 sm:mt-20 lg:mt-0 lg:col-span-4 lg:col-start-9"><dl className="text-xs leading-[1.55] text-[#121212]">{facts.map(([label, value]) => <div key={label} className="mb-5"><dt className="font-semibold">{label}:</dt><dd>{value}</dd></div>)}</dl></div>}
+          </div>
         </header>
 
-        <section data-reveal className="mt-16 grid gap-12 border-t border-black/[0.09] pt-8 lg:mt-20 lg:grid-cols-12 lg:gap-20">
-          <div className="lg:col-span-7">
-            <p className="font-mono-tech text-[10px] uppercase tracking-[0.16em] text-[#777771] sm:text-[11px]">Project story</p>
-            <h2 className="mt-6 max-w-3xl text-2xl font-semibold leading-tight tracking-[-0.03em] sm:text-3xl">{story.heading}</h2>
-            <div className="mt-7 max-w-3xl space-y-6 font-narrative text-lg leading-[1.58] text-[#222222] sm:text-xl">
-              {story.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        {projectId === 'mithchowki-transformation' && <section className="mt-12 sm:mt-16" aria-label={`${title} supporting video`}>
+          <video ref={mithchowkiVideoRef} controls playsInline preload="metadata" className="mx-auto block h-auto w-full max-w-3xl">
+            <source src="/projects/mithchowki-transformation/Video%20Project.mp4" type="video/mp4" />
+          </video>
+        </section>}
+
+        {projectId === 'jamming-studio' && <section className="mt-13" aria-label={`${title} visual narrative`}><React.Suspense fallback={<div className="jamming-collage-frame" aria-hidden="true" />}><JammingStudioCollage title="Jamming Studio image collage" className="jamming-collage-frame" /></React.Suspense></section>}
+
+        {projectId === 'urban-traction' && (
+          <>
+            <section className="mt-10 sm:mt-8 lg:mt-8" aria-label="Urban Step and Road Network sequences">
+              <div className="mx-auto grid w-full max-w-[1300px] grid-cols-1 items-start gap-y-12 sm:gap-y-20 md:grid-cols-2 md:gap-x-6 md:gap-y-0">
+                <figure className="min-w-0 w-full">
+                  <React.Suspense fallback={<div className="h-[700px] w-full" aria-hidden="true" />}>
+                    <UrbanTractionStudy
+                      title="Urban Traction urban step sequence"
+                      className="!block !h-[700px] !w-full overflow-hidden border-0"
+                      contentCss={urbanTractionSequenceLayoutCss}
+                      disableAutoHeight
+                      disableScroll
+                    />
+                  </React.Suspense>
+                </figure>
+                <figure className="min-w-0 w-full">
+                  <React.Suspense fallback={<div className="h-[700px] w-full" aria-hidden="true" />}>
+                    <RoadNetwork
+                      title="Urban Traction road network sequence"
+                      className="!block !h-[700px] !w-full overflow-hidden border-0"
+                      contentCss={urbanTractionSequenceLayoutCss}
+                      disableAutoHeight
+                      disableScroll
+                    />
+                  </React.Suspense>
+                </figure>
+              </div>
+            </section>
+            <section className="relative left-1/2 mt-3 w-screen -translate-x-1/2 bg-white sm:mt-4" aria-label="Urban Traction transformation comparison and image collage">
+              <React.Suspense fallback={<div className="h-[620px] w-full" aria-hidden="true" />}>
+                <UrbanTractionComparisons
+                  title="Urban Traction existing and proposed comparisons"
+                  className="block w-full border-0"
+                />
+              </React.Suspense>
+              <React.Suspense fallback={<div className="h-[calc(100svh-120px)] w-full" aria-hidden="true" />}>
+                <UrbanTractionCollage
+                  title="Urban Traction image collage"
+                  className="block h-[calc(100svh-120px)] w-full border-0"
+                  disableAutoHeight
+                />
+              </React.Suspense>
+            </section>
+          </>
+        )}
+
+        {projectId === 'housing-one' && (
+          <section className="mt-12 sm:mt-8 lg:mt-16" aria-label="Affordable Housing unit mix, site study, massing sequence, and image collage">
+            <div className="mx-auto grid w-full max-w-[1200px] grid-cols-1 items-start gap-y-12 sm:gap-y-20 md:grid-cols-2 md:gap-x-6 md:gap-y-0">
+              <figure>
+                <React.Suspense fallback={<div className="h-[834px] w-full" aria-hidden="true" />}>
+                  <HousingOneStepSequences
+                    title="Housing One site study step sequence"
+                    className="!block !h-[834px] w-full border-0"
+                    contentCss=".seq__head,.study__head{margin-bottom:34px}.stage{aspect-ratio:1358/933}.caption{min-height:78px;margin-top:26px}.counter{margin-top:21px}.track{margin-top:15px}.hint{margin-top:17px}"
+                    disableAutoHeight
+                  />
+                </React.Suspense>
+              </figure>
+              <figure>
+                <SequenceFrame
+                  src="/housing-massing-sequence.html"
+                  title="Housing One massing step sequence"
+                  className="!block !h-[700px] w-full border-0"
+                  contentCss=".seq__head,.study__head{margin-bottom:34px}.stage{aspect-ratio:1358/933}.caption{min-height:78px;margin-top:26px}.counter{margin-top:21px}.track{margin-top:15px}.hint{margin-top:17px}"
+                  disableAutoHeight
+                />
+              </figure>
             </div>
+            <div className="relative left-1/2 mt-12 w-screen -translate-x-1/2 sm:mt-16">
+              <SequenceFrame
+                src="/housing-standalone.html"
+                title="Housing One project image collage"
+                className="block h-[100svh] w-full border-0"
+              />
+            </div>
+          </section>
+        )}
+
+        {projectId === 'production-design' && (
+          <section className="relative left-1/2 w-screen -translate-x-1/2" aria-label={`${title} visual narrative`}>
+            <React.Suspense fallback={<div className="h-[400px] w-full" aria-hidden="true" />}>
+              <ProductionDesignCollage
+                title={`${title} visual narrative`}
+                className="block h-[800px] w-full border-0"
+              />
+            </React.Suspense>
+          </section>
+        )}
+
+        {projectId !== 'jamming-studio' && projectId !== 'urban-traction' && projectId !== 'housing-one' && projectId !== 'production-design' && galleryImages.length > 0 && <section className="mt-12 sm:mt-8 lg:mt-16" aria-label={`${title} visual narrative`}>
+          <div className="grid grid-cols-1 gap-y-12 sm:gap-y-20 lg:grid-cols-12 lg:gap-y-20">
+            {galleryImages.map((image, imageIndex) => <figure key={`${image.imageUrl}-${imageIndex}`} className={imageIndex % 2 === 0 ? 'lg:col-span-12 lg:pl-[42%]' : 'lg:col-span-12 lg:pr-[42%] lg:mt-24'}>
+              <div className="project-detail__plate project-detail__image" style={{ '--ar': image.aspectRatio } as React.CSSProperties}><img src={image.imageUrl} alt={image.caption} loading="lazy" /></div>
+              <figcaption className="project-detail__reveal-text font-narrative mt-4 max-w-[40ch] leading-relaxed text-[#121212]">{image.caption}</figcaption>
+            </figure>)}
           </div>
-          <aside className="border-t border-black/[0.09] pt-6 lg:col-span-4 lg:col-start-9 lg:border-t-0 lg:pt-0">
-            <dl className="space-y-4 text-base leading-relaxed text-[#555550] sm:text-lg">
-              <div><dt className="inline font-semibold text-[#111111]">Client: </dt><dd className="inline">{project.client}</dd></div>
-              <div><dt className="inline font-semibold text-[#111111]">Project type: </dt><dd className="inline">{project.category}</dd></div>
-              <div><dt className="inline font-semibold text-[#111111]">Completion date: </dt><dd className="inline">{project.year}</dd></div>
-              <div><dt className="inline font-semibold text-[#111111]">Location: </dt><dd className="inline">{project.area}, {project.city}</dd></div>
-              {project.focus && <div className="pt-5"><dt className="font-semibold text-[#111111]">Focus:</dt><dd className="mt-2 text-base">{project.focus}</dd></div>}
-            </dl>
-          </aside>
-        </section>
+        </section>}
 
-        <EditorialProjectNarrative projectId={project.id} projectTitle={project.title} images={images} />
+        {projectId === 'loop' && (
+          <>
+            <section className="relative left-1/2 mt-28 w-screen -translate-x-1/2 sm:mt-40" aria-label="Loop project step sequence">
+              <React.Suspense fallback={<div className="h-[834px] w-full" aria-hidden="true" />}>
+                <LoopRow
+                  title="Loop neighbourhood analysis step sequences"
+                  className="block h-[834px] w-full border-0"
+                />
+              </React.Suspense>
+            </section>
+            <section className="relative left-1/2 mt-12 w-screen -translate-x-1/2 sm:mt-16" aria-label="Loop project collage">
+              <React.Suspense fallback={<div className="h-[100svh] w-full" aria-hidden="true" />}>
+                <LoopCollage
+                  title="Loop project collage"
+                  className="block h-[100svh] w-full border-0"
+                />
+              </React.Suspense>
+            </section>
+          </>
+        )}
 
-        <nav data-reveal className="mt-24 flex items-end justify-between border-t border-black/[0.09] pt-6 sm:mt-32" aria-label="Project navigation">
-          <span className="font-mono-tech text-[10px] uppercase tracking-[0.16em] text-[#777771] sm:text-[11px]">Next project</span>
-          <a href={`/work/${nextProject.id}`} className="group text-right">
-            <span className="block font-mono-tech text-[10px] uppercase tracking-[0.14em] text-[#777771] sm:text-[11px]">{nextProject.area}, {nextProject.city}</span>
-            <span className="mt-2 block text-2xl font-semibold leading-none tracking-[-0.04em] transition-transform duration-300 group-hover:translate-x-1 sm:text-4xl">{nextProject.title} →</span>
-          </a>
+        <nav className={`project-detail__reveal-text flex justify-end border-t border-[#121212] pt-6 ${projectId === 'urban-traction' ? 'mt-0' : projectId === 'housing-one' ? 'mt-12 sm:mt-16' : 'mt-28 sm:mt-40'}`} aria-label="Project navigation">
+          <a href="/work" className="text-right text-[11px] uppercase tracking-[0.12em] text-[#121212] hover:text-[#777] sm:text-xs">Work →</a>
         </nav>
       </div>
     </section>

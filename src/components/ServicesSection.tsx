@@ -3,9 +3,12 @@ import { Building2, Compass, Layers3 } from 'lucide-react';
 import { LEGACY_PROJECTS_REGISTRY, PROJECTS_REGISTRY } from '../data/mapConfig';
 
 const services = [
-  { icon: Compass, number: '01', title: 'Urban strategy', text: 'Connected plans for neighbourhoods, public realm, mobility, and resilient growth.' },
-  { icon: Building2, number: '02', title: 'Architecture', text: 'Thoughtful civic, workplace, cultural, and mixed-use spaces from concept to delivery.' },
-  { icon: Layers3, number: '03', title: 'Project coordination', text: 'Clear coordination across teams, drawing packages, consultants, and construction milestones.' },
+  { icon: Building2, number: '01', title: 'Architecture & Urban Design', text: 'Architecture and urban design services.' },
+  { icon: Building2, number: '02', title: 'Interior Designing', text: 'Interior design services.' },
+  { icon: Layers3, number: '03', title: 'Set & Production Design', text: 'Set and production design services.' },
+  { icon: Layers3, number: '04', title: 'Design Visualization & 3D Rendering', text: 'Design visualization and 3D rendering services.' },
+  { icon: Compass, number: '05', title: 'Website Designing', text: 'Website design services.' },
+  { icon: Compass, number: '06', title: 'Project Coordination & Construction Support', text: 'Project coordination and construction support.' },
 ];
 
 const findProject = (projects: typeof PROJECTS_REGISTRY, id: string) => projects.find((project) => project.id === id)!;
@@ -24,9 +27,8 @@ export const ServicesSection: React.FC = () => (
           <p className="mb-4 text-xs font-mono-tech tracking-[0.2em] text-[#666660]">SERVICES / SELECTED STUDIES</p>
           <h2 className="max-w-3xl text-4xl font-bold leading-[1.03] tracking-tight text-[#111111] sm:text-6xl">Spaces that connect people, systems, and place.</h2>
         </div>
-        <p className="max-w-sm text-sm leading-relaxed text-[#555550]">A multidisciplinary practice spanning strategy, design, and coordinated project delivery.</p>
+        <p className="max-w-sm text-sm leading-relaxed text-[#555550]">A multidisciplinary practice spanning architecture, interiors, production design, visualization, digital design, and project delivery.</p>
       </div>
-
       <div data-reveal className="grid gap-px overflow-hidden rounded-xl border border-black/10 bg-black/10 md:grid-cols-3">
         {services.map(({ icon: Icon, number, title, text }) => (
           <article key={title} className="bg-[#e9e7e1] p-7 transition-colors hover:bg-white md:p-8">
@@ -51,9 +53,7 @@ export const HomeProjectListing: React.FC = () => (
         {homeProjects.map((project, index) => (
           <article key={project.id} className={`group min-w-0 border-t border-white/20 px-1 pb-10 pt-4 md:px-4 md:pb-12 lg:border-t-0 lg:pt-0 ${index > 0 ? 'lg:border-l lg:border-white/20 lg:pl-5' : ''} ${index % 2 === 1 ? 'md:border-l md:border-white/20' : ''}`}>
             <a href={`/work/${project.id}`} className="block">
-              <div className="aspect-[16/10] overflow-hidden bg-[#222222]">
-                <img src={project.heroImage} alt={project.title} loading="lazy" className="h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.035]" />
-              </div>
+              <div className="aspect-[16/10] overflow-hidden bg-[#222222]"><img src={project.heroImage} alt={project.title} loading="lazy" className="h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.035]" /></div>
               <div className="pt-5">
                 <p className="font-mono-tech text-[10px] uppercase tracking-[0.13em] text-white/55 sm:text-[11px]">{project.category}</p>
                 <h3 className="mt-3 font-project-title text-2xl leading-[1.15] text-white sm:text-3xl">{project.title}</h3>

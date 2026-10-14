@@ -1,0 +1,3 @@
+export function NotFoundPage() {
+  return <main className="grid min-h-screen place-items-center bg-[var(--bg-primary)] px-5 pt-20 text-[var(--text-primary)]"><section className="max-w-xl text-center"><p className="font-mono-tech text-[10px] uppercase tracking-[0.18em] text-[var(--text-muted)]">Error 404</p><h1 className="mt-5 text-6xl font-semibold tracking-[-0.07em] sm:text-8xl">Page not found</h1><p className="mt-6 text-[var(--text-secondary)]">The page you requested does not exist or has moved.</p><a href="/" className="mt-10 inline-block border-b border-current pb-1 font-mono-tech text-xs uppercase tracking-[0.14em] transition-opacity hover:opacity-60">Return home</a></section></main>;
+}

@@ -10,7 +10,6 @@ const heroProjects = [
   findProject(PROJECTS_REGISTRY, 'tedx-gateway'),
   findProject(LEGACY_PROJECTS_REGISTRY, 'jamming-studio'),
   findProject(PROJECTS_REGISTRY, 'urban-traction'),
-  findProject(PROJECTS_REGISTRY, 'green-catalyst'),
   findProject(PROJECTS_REGISTRY, 'loop'),
   findProject(PROJECTS_REGISTRY, 'mithchowki-transformation'),
 ];
@@ -47,7 +46,10 @@ export function HeroProjectCarousel() {
     if (!start || !end) return;
     const deltaX = end.clientX - start.x;
     const deltaY = end.clientY - start.y;
-    if (Math.abs(deltaX) > 42 && Math.abs(deltaX) > Math.abs(deltaY)) deltaX < 0 ? next() : previous();
+    if (Math.abs(deltaX) > 42 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (deltaX < 0) next();
+      else previous();
+    }
   };
 
   return (

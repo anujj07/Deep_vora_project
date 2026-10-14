@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -7,40 +7,52 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Navigation } from './components/Navigation';
 import { HeroSection } from './components/HeroSection';
 import { MultiProjectIndex } from './components/MultiProjectIndex';
-import { CustomCursor } from './components/CustomCursor';
-import { Footer } from './components/Footer';
-import { JournalEmbed } from './components/JournalEmbed';
-import { ProfilePage } from './components/ProfilePage';
-import { ServicesPage } from './components/ServicesPage';
-import { WorkPage } from './components/WorkPage';
-import { ProjectPage } from './components/ProjectPage';
-import { ArchitecturePage } from './components/ArchitecturePage';
-import { PROJECTS_REGISTRY, type ProjectLocation } from './data/mapConfig';
-import { PagePreloader } from './components/PagePreloader';
+// Replaced by <WorkPageBody /> in the single-page homepage scroll.
+import { AboutPageBody, ProfilePage } from './components/ProfilePage';
+import { WorkPage, WorkPageBody } from './components/WorkPage';
+import { ContactPage, ContactPageBody } from './components/ContactPage';
+import { LegalPage } from './components/LegalPage';
+import { NotFoundPage } from './components/NotFoundPage';
+import { LEGACY_PROJECTS_REGISTRY, PROJECTS_REGISTRY, type ProjectLocation } from './data/mapConfig';
 import { useSectionRevealAnimations } from './hooks/useSectionRevealAnimations';
+
+const ProjectPage = lazy(() => import('./components/ProjectPage').then((module) => ({ default: module.ProjectPage })));
 
 gsap.registerPlugin(ScrollTrigger);
 
-const resolvePage = (path: string): 'home' | 'work' | 'project' | 'architecture' | 'services' | 'about' | 'contact' => {
-  if (path.startsWith('/work/')) return 'project';
-  return path === '/work' ? 'work' : path === '/architecture' ? 'architecture' : path === '/services' ? 'services' : path === '/contact' ? 'contact' : path === '/about' ? 'about' : 'home';
+type Page = 'home' | 'work' | 'project' | 'about' | 'contact' | 'privacy' | 'terms' | 'not-found';
+
+const resolvePage = (path: string): Page => {
+  if (path.startsWith('/work/')) return [...PROJECTS_REGISTRY, ...LEGACY_PROJECTS_REGISTRY].some((project) => project.id === path.slice('/work/'.length)) ? 'project' : 'not-found';
+  if (path === '/') return 'home';
+  return path === '/work' ? 'work' : path === '/contact' ? 'contact' : path === '/about' ? 'about' : path === '/privacy' ? 'privacy' : path === '/terms' ? 'terms' : 'not-found';
 };
 
 export function App() {
   const appRef = useRef<HTMLDivElement>(null);
-  const [page, setPage] = useState<'home' | 'work' | 'project' | 'architecture' | 'services' | 'about' | 'contact'>(() => resolvePage(window.location.pathname));
-  const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState<Page>(() => resolvePage(window.location.pathname));
+  const isLoading = false;
   const [isProjectDrawerOpen, setIsProjectDrawerOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<ProjectLocation>(PROJECTS_REGISTRY[0]);
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => localStorage.getItem('theme') === 'dark' ? 'dark' : 'light');
+  const [theme] = useState<'light' | 'dark'>(() => localStorage.getItem('theme') === 'dark' ? 'dark' : 'light');
   const reducedMotion = useReducedMotion();
   useSectionRevealAnimations(appRef, !isLoading);
-  const finishLoading = useCallback(() => setIsLoading(false), []);
 
   useEffect(() => {
-    localStorage.setItem('theme', theme);
     document.documentElement.dataset.theme = theme;
   }, [theme]);
+
+  useEffect(() => {
+    const project = page === 'project' ? [...PROJECTS_REGISTRY, ...LEGACY_PROJECTS_REGISTRY].find((item) => item.id === window.location.pathname.slice('/work/'.length)) : undefined;
+    const metadata: Record<Page, [string, string]> = {
+      home: ['Deep Vora', 'Deep Vora is an independent architectural practice working across architecture, urban design, and project delivery.'], work: ['Work — Deep Vora', 'Selected architecture, urban design, and construction work by Deep Vora.'], project: [`${project?.title ?? 'Project'} — Deep Vora`, project?.description ?? 'Selected work by Deep Vora.'], about: ['About — Deep Vora', 'About Deep Vora, an independent architectural practice.'], contact: ['Contact — Deep Vora', 'Contact Deep Vora about architecture, urban design, and project coordination.'], privacy: ['Privacy Policy — Deep Vora', 'Privacy information for the Deep Vora portfolio website.'], terms: ['Terms of Use — Deep Vora', 'Terms of use for the Deep Vora portfolio website.'], 'not-found': ['Page Not Found — Deep Vora', 'The requested page could not be found.'],
+    };
+    const [title, description] = metadata[page];
+    document.title = title;
+    document.querySelector('meta[name="description"]')?.setAttribute('content', description);
+    document.querySelector('meta[property="og:title"]')?.setAttribute('content', title);
+    document.querySelector('meta[property="og:description"]')?.setAttribute('content', description);
+  }, [page]);
 
   useEffect(() => {
     // Check for prefers-reduced-motion
@@ -82,12 +94,26 @@ export function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
+  useEffect(() => {
+    if (page !== 'home') return;
+    const refresh = () => ScrollTrigger.refresh();
+    const frame = requestAnimationFrame(refresh);
+    window.addEventListener('load', refresh, { once: true });
+    const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(refresh);
+    if (appRef.current) observer?.observe(appRef.current);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('load', refresh);
+      observer?.disconnect();
+    };
+  }, [page]);
+
   const handleSelectProject = (proj: ProjectLocation) => {
     setSelectedProject(proj);
   };
 
   const handleNavigate = (id: string) => {
-    if (id === 'work' || id === 'architecture' || id === 'services' || id === 'about' || id === 'contact') {
+    if (id === 'work' || id === 'about' || id === 'contact') {
       window.history.pushState({}, '', `/${id}`);
       setPage(id);
       window.scrollTo(0, 0);
@@ -104,17 +130,12 @@ export function App() {
   };
 
   return (
-    <div ref={appRef} data-theme-root={theme} className="relative min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] selection:bg-black selection:text-white">
-      {isLoading && <PagePreloader onComplete={finishLoading} />}
+    <div ref={appRef} data-theme-root={theme} className={`relative min-h-screen ${page === 'home' ? 'z-[1] bg-transparent' : 'bg-[var(--bg-primary)]'} text-[var(--text-primary)] selection:bg-black selection:text-white`}>
+      {/* <PagePreloader onComplete={finishLoading} /> */}
       {!isLoading && <>
-      {/* Custom Inertial Trailing Cursor */}
-      <CustomCursor />
-
       {/* Persistent Navigation & HUD */}
       <Navigation
         onNavigate={handleNavigate}
-        theme={theme}
-        onToggleTheme={() => setTheme((current) => current === 'light' ? 'dark' : 'light')}
       />
 
       <AnimatePresence mode="wait" initial={false}>
@@ -125,16 +146,22 @@ export function App() {
           exit={reducedMotion ? undefined : { opacity: 0, y: -8 }}
           transition={{ duration: reducedMotion ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] }}
         >
-          {page === 'about' || page === 'contact' ? (
+          {page === 'about' ? (
             <ProfilePage page={page} onBack={() => handleNavigate('index')} onContact={() => handleNavigate('contact')} />
+          ) : page === 'contact' ? (
+            <ContactPage />
+          ) : page === 'privacy' ? (
+            <LegalPage type="privacy" />
+          ) : page === 'terms' ? (
+            <LegalPage type="terms" />
+          ) : page === 'not-found' ? (
+            <NotFoundPage />
           ) : page === 'work' ? (
             <WorkPage />
-          ) : page === 'architecture' ? (
-            <ArchitecturePage />
-          ) : page === 'services' ? (
-            <ServicesPage />
           ) : page === 'project' ? (
-            <ProjectPage projectId={window.location.pathname.slice('/work/'.length)} />
+            <Suspense fallback={<div className="min-h-screen bg-white" aria-busy="true" />}>
+              <ProjectPage projectId={window.location.pathname.slice('/work/'.length)} />
+            </Suspense>
           ) : (
             <>
 
@@ -149,8 +176,9 @@ export function App() {
         selectedProjectId={selectedProject.id}
       />
 
-      <JournalEmbed />
-      <Footer />
+      <section id="work" className="relative z-[1] bg-[var(--bg-primary)]"><WorkPageBody headingLevel={2} /></section>
+      <section id="about" className="relative z-[1] bg-[var(--bg-primary)]"><AboutPageBody headingLevel={2} /></section>
+      <section id="contact" className="relative z-[1] bg-[var(--bg-primary)]"><ContactPageBody headingLevel={2} /></section>
             </>
           )}
         </motion.main>

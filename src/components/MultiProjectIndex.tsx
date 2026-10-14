@@ -19,7 +19,7 @@ export const MultiProjectIndex: React.FC<MultiProjectIndexProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex justify-end transition-opacity duration-300">
-      <div className="w-full max-w-2xl h-full bg-[#fcfbf9] overflow-y-auto p-6 md:p-12 flex flex-col justify-between shadow-2xl border-l border-black/10 animate-slideLeft">
+      <div className="w-full max-w-2xl h-full bg-white overflow-y-auto p-6 md:p-12 flex flex-col justify-between shadow-2xl border-l border-black/10 animate-slideLeft">
         {/* Header */}
         <div>
           <div className="flex items-center justify-between border-b border-black/[0.08] pb-6 mb-8">

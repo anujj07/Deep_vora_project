@@ -14,7 +14,6 @@ interface MapVectorProps {
 }
 
 export const MapVector: React.FC<MapVectorProps> = ({
-  activeProject = 'jamming-studio',
   opacityLayers = {
     baseGrid: 1,
     coastline: 1,
@@ -25,6 +24,7 @@ export const MapVector: React.FC<MapVectorProps> = ({
   }
 }) => {
   return (
+    <svg viewBox="0 0 1000 1000" role="img" aria-label="Project location map">
       <defs>
         {/* Subtle grid pattern */}
         <pattern id="archGrid" width="40" height="40" patternUnits="userSpaceOnUse">

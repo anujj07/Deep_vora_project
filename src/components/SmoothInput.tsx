@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
 
 type InputProps = React.ComponentPropsWithoutRef<'input'> & { wrapperClassName?: string };
@@ -23,7 +23,7 @@ export const SmoothInput = forwardRef<HTMLInputElement, InputProps>(
     const controlled = value !== undefined;
     const inputValue = controlled ? String(value ?? '') : internalValue;
 
-    const updateCaret = (input: HTMLInputElement) => {
+    const updateCaret = useCallback((input: HTMLInputElement) => {
       const selectionStart = input.selectionStart ?? 0;
       const selectionEnd = input.selectionEnd ?? selectionStart;
       if (selectionStart !== selectionEnd) { opacity.set(0); return; }
@@ -46,7 +46,7 @@ export const SmoothInput = forwardRef<HTMLInputElement, InputProps>(
       const x = absoluteX - input.scrollLeft;
       caretX.set(Math.max(paddingLeft - 1, Math.min(x, input.clientWidth - paddingRight)));
       opacity.set(1);
-    };
+    }, [caretX, opacity]);
 
     useEffect(() => {
       const input = inputRef.current;
@@ -56,9 +56,9 @@ export const SmoothInput = forwardRef<HTMLInputElement, InputProps>(
       input.addEventListener('scroll', refresh);
       window.addEventListener('resize', refresh);
       return () => { document.removeEventListener('selectionchange', refresh); input.removeEventListener('scroll', refresh); window.removeEventListener('resize', refresh); };
-    }, []);
+    }, [updateCaret]);
 
-    useEffect(() => { const input = inputRef.current; if (input && document.activeElement === input) updateCaret(input); }, [inputValue]);
+    useEffect(() => { const input = inputRef.current; if (input && document.activeElement === input) updateCaret(input); }, [inputValue, updateCaret]);
 
     return (
       <div className={`relative ${wrapperClassName}`}>

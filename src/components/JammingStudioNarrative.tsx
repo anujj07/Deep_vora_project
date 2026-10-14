@@ -143,7 +143,7 @@ export const JammingStudioNarrative: React.FC = () => {
     <div
       id="project-narrative"
       ref={narrativeContainerRef}
-      className="relative w-full bg-[#fcfbf9] text-[#121212] pt-24 pb-36 px-6 md:px-12 lg:px-20"
+      className="relative w-full bg-white text-[#121212] pt-24 pb-36 px-6 md:px-12 lg:px-20"
     >
       {/* Narrative Section Header */}
       <div className="max-w-6xl mx-auto mb-28 border-b border-black/[0.08] pb-12">
@@ -239,7 +239,7 @@ export const JammingStudioNarrative: React.FC = () => {
                   {item.subtitle}
                 </h4>
 
-                <p className="text-sm md:text-base text-[#444440] leading-relaxed mb-6 font-normal">
+                <p className="font-narrative text-[#444440] leading-relaxed mb-6">
                   {item.description}
                 </p>
 
