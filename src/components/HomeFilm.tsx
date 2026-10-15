@@ -8,15 +8,15 @@ const portraitMobileQuery = '(max-width: 760px) and (orientation: portrait)';
 const reducedMotionQuery = '(prefers-reduced-motion: reduce)';
 
 function getHomeFilmSource() {
-  if (!window.matchMedia(mobileQuery).matches) return '/media/fix_video.mp4';
+  if (!window.matchMedia(mobileQuery).matches) return '/media/updated_video_images_1-13.mp4';
   if (window.matchMedia(portraitMobileQuery).matches) {
-    return '/media/mobile_user_vidoes/mobile_vertical_1080x1920.mp4';
+    return '/media/mobile_user_vidoes/mobile-1080.mp4';
   }
 
   const effectiveScreenWidth = window.screen.width * window.devicePixelRatio;
   return effectiveScreenWidth <= 600
     ? '/media/mobile_user_vidoes/mobile_480p_16x9.mp4'
-    : '/media/mobile_user_vidoes/mobile_720p_16x9.mp4';
+    : '/media/mobile_user_vidoes/mobile-720.mp4';
 }
 
 gsap.registerPlugin(ScrollTrigger);
