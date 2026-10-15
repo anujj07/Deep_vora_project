@@ -7,12 +7,25 @@ const mobileQuery = '(max-width: 760px)';
 const portraitMobileQuery = '(max-width: 760px) and (orientation: portrait)';
 const reducedMotionQuery = '(prefers-reduced-motion: reduce)';
 
+function getHomeFilmSource() {
+  if (!window.matchMedia(mobileQuery).matches) return '/media/fix_video.mp4';
+  if (window.matchMedia(portraitMobileQuery).matches) {
+    return '/media/mobile_user_vidoes/mobile_vertical_1080x1920.mp4';
+  }
+
+  const effectiveScreenWidth = window.screen.width * window.devicePixelRatio;
+  return effectiveScreenWidth <= 600
+    ? '/media/mobile_user_vidoes/mobile_480p_16x9.mp4'
+    : '/media/mobile_user_vidoes/mobile_720p_16x9.mp4';
+}
+
 gsap.registerPlugin(ScrollTrigger);
 
 export function HomeFilm() {
   const [isMobile, setIsMobile] = useState(() => window.matchMedia(mobileQuery).matches);
   const [isPortraitMobile, setIsPortraitMobile] = useState(() => window.matchMedia(portraitMobileQuery).matches);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => window.matchMedia(reducedMotionQuery).matches);
+  const [filmSource, setFilmSource] = useState(getHomeFilmSource);
   const spacerRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const filmRef = useRef<HTMLDivElement>(null);
@@ -24,6 +37,7 @@ export function HomeFilm() {
     const updateMobile = () => setIsMobile(mobileMedia.matches);
     const updatePortraitMobile = () => setIsPortraitMobile(portraitMobileMedia.matches);
     const updateReducedMotion = () => setPrefersReducedMotion(reducedMotionMedia.matches);
+    const updateFilmSource = () => setFilmSource(getHomeFilmSource());
 
     updateMobile();
     updatePortraitMobile();
@@ -31,10 +45,14 @@ export function HomeFilm() {
     mobileMedia.addEventListener('change', updateMobile);
     portraitMobileMedia.addEventListener('change', updatePortraitMobile);
     reducedMotionMedia.addEventListener('change', updateReducedMotion);
+    window.addEventListener('resize', updateFilmSource);
+    window.addEventListener('orientationchange', updateFilmSource);
     return () => {
       mobileMedia.removeEventListener('change', updateMobile);
       portraitMobileMedia.removeEventListener('change', updatePortraitMobile);
       reducedMotionMedia.removeEventListener('change', updateReducedMotion);
+      window.removeEventListener('resize', updateFilmSource);
+      window.removeEventListener('orientationchange', updateFilmSource);
     };
   }, []);
 
@@ -65,7 +83,7 @@ export function HomeFilm() {
     }, { threshold: 0 });
     observer.observe(spacer);
     return () => observer.disconnect();
-  }, [isMobile, prefersReducedMotion]);
+  }, [filmSource, isMobile, prefersReducedMotion]);
 
   const mediaClassName = isPortraitMobile ? 'h-full w-full object-contain' : 'h-full w-full object-cover';
   const film = (
@@ -73,8 +91,8 @@ export function HomeFilm() {
       {prefersReducedMotion ? (
         <div className="h-full w-full bg-white" />
       ) : (
-        <video ref={videoRef} key="updated-home-film" muted loop playsInline preload="none" className={mediaClassName}>
-          <source src="/media/updated_video.mp4" type="video/mp4" />
+        <video ref={videoRef} key={filmSource} muted loop playsInline preload="none" className={mediaClassName}>
+          <source src={filmSource} type="video/mp4" />
         </video>
       )}
     </div>
